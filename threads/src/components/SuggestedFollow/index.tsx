@@ -1,7 +1,7 @@
 
 import { Box, Card, CardBody, Text, Avatar, Button } from '@chakra-ui/react'
 
-export default function SuggestedFollow() {
+export function SuggestedFollow() {
   return (
     <Box display={"flex"} width={"300px"} height={"fit-content"} >
       <Card width={"100%"} bg={"transparent"} border="1px solid white" color={"white"}>
