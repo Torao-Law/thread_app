@@ -1,5 +1,6 @@
 import { Box, Image, Text } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
+import  { IThreadCard } from "@/types/thread";
 
 export type ThreadCard = {
   id: number | undefined;
@@ -22,7 +23,7 @@ type User = {
   profile_picture?: string
 }
 
-export function Threads(props: ThreadCard) {
+export function Threads(props: IThreadCard) {
   const navigate = useNavigate()
 
   return (
