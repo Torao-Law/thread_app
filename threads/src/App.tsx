@@ -46,7 +46,7 @@ function App() {
       setIsLoading(false)
       navigate('/auth/login')
     }
-  }
+  }  
 
   useEffect(() => {
     if (localStorage.token) {
@@ -65,13 +65,14 @@ function App() {
     }
   }
 
-  // function IsLogin() {
-  //   if (auth.username) {
-  //     return <Navigate to="/" />
-  //   } else {
-  //     return <Outlet />
-  //   }
-  // }
+  function IsLogin() {
+    if (auth.username) {
+      return <Navigate to="/" />
+    } else {
+      return <Outlet />
+    }
+  }
+  
   return (
     <>
       {
@@ -89,10 +90,10 @@ function App() {
               />
             </Route> 
             
-            {/* <Route path="/" element={<IsLogin />}> */}
+            <Route path="/" element={<IsLogin />}>
               <Route path="/auth/register" element={ <Register />} />
               <Route path="/auth/login" element={<Login />} />
-            {/* </Route> */}
+            </Route>
           </Routes>
         </ChakraProvider>
       }

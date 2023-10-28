@@ -1,17 +1,17 @@
 import { Box, Image, Text } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
-import  { IThreadCard } from "@/types/thread";
+import  { IThreadCard } from "@/types/Thread";
 
 export type ThreadCard = {
-  id: number | undefined;
-  author_picture: string | undefined;
-  author_name: string | undefined;
-  author_username: string | undefined;
-  posted_at: string | undefined;
-  content: string | undefined;
-  image: string | undefined;
-  likes_count: number | undefined;
-  replies_count: number | undefined; 
+  id: number;
+  author_picture: string;
+  author_name: string;
+  author_username: string;
+  posted_at: string;
+  content: string;
+  image: string;
+  likes_count: number;
+  replies_count: number; 
   users: User
 }
 
@@ -36,7 +36,7 @@ export function Threads(props: IThreadCard) {
       color={"white"}
     >
       <Image 
-        src={props.author_picture}
+        src={props.user?.picture ? props.user?.picture : "/img-profile.jpg"}
         width={"50px"}
         height={"50px"}
         objectFit={"cover"}
@@ -45,8 +45,8 @@ export function Threads(props: IThreadCard) {
       />
       <Box>
         <Box display={"flex"}>
-          <Text style={{fontWeight: "bold"}}>{props.users?.full_name}</Text>
-          <Text style={{color: "grey"}}>@{props.users?.username}</Text> 
+          <Text style={{fontWeight: "bold"}}>{props.user?.full_name}</Text>
+          <Text style={{color: "grey"}}>@{props.user?.username}</Text> 
           <Text style={{color: "grey"}}>{props.posted_at}</Text>
         </Box>
         <Box>
