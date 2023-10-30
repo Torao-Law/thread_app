@@ -1,7 +1,7 @@
 import { RootState } from "./store/type/RootState"
 import { useDispatch } from "react-redux"
 import { useSelector } from "react-redux"
-import { API, seAuthToken } from "./libs/api"
+import { API, setAuthToken } from "./libs/api"
 import { useEffect, useState } from "react"
 import { AUTH_CHECK, AUTH_ERROR } from "./store/RootReducer"
 import { ChakraProvider, extendTheme } from "@chakra-ui/react"
@@ -26,18 +26,16 @@ const theme = extendTheme({
 
 // setAuthToken => apakah sudah token ? akses : login/register
 function App() {
-  const auth = useSelector((state: RootState) => state.auth)
   const [isLoading, setIsLoading] = useState<boolean>(true)
+  const auth = useSelector((state: RootState) => state.auth)
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
-  // function authCheck 
   async function authCheck() {
     try {
-      seAuthToken(localStorage.token)
-      const response = await API.get("/auth/check")
-      console.log("check auth app", response)
-
+      setAuthToken(localStorage.token)
+      const response = await API.get('/auth/check')
+      console.log("authCheck : ", response)
       dispatch(AUTH_CHECK(response.data.user))
       setIsLoading(false)
     } catch (err) {
@@ -56,22 +54,22 @@ function App() {
     }
   }, [])
 
-  // Private Root
   function IsNotLogin() {
     if (!auth.username) {
-      return <Navigate to="/auth/login" />
+      return <Navigate to={"/auth/login"} />;
     } else {
-      return <Outlet />
+      return <Outlet />;
     }
   }
 
-  // function IsLogin() {
-  //   if (auth.username) {
-  //     return <Navigate to="/" />
-  //   } else {
-  //     return <Outlet />
-  //   }
-  // }
+  function IsLogin() {
+    if (auth.username) {
+      return <Navigate to={"/"} />;
+    } else {
+      return <Outlet />;
+    }
+  }
+
   return (
     <>
       {
@@ -89,10 +87,10 @@ function App() {
               />
             </Route> 
             
-            {/* <Route path="/" element={<IsLogin />}> */}
+            <Route path="/" element={<IsLogin />}>
               <Route path="/auth/register" element={ <Register />} />
               <Route path="/auth/login" element={<Login />} />
-            {/* </Route> */}
+            </Route>
           </Routes>
         </ChakraProvider>
       }

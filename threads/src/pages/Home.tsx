@@ -1,10 +1,12 @@
 import { Box } from '@chakra-ui/react';
-import { Threads } from '@/features/threads';
+import { ThreadCard } from '@/features/threads';
 import FormThread from '@/features/threads/component/FormThread';
 import { useThreads } from '@/features/threads/Hooks/useThreads';
 
 export default function Home() {
   const { getThreads } = useThreads()
+  console.log(getThreads);
+  
 
   return (
     <Box display={"flex"} justifyContent={"center"}>
@@ -24,7 +26,7 @@ export default function Home() {
         { getThreads?.map((item: any) => {
             return (
               <Box key={item.id}>
-                <Threads
+                <ThreadCard
                   user={item.user}
                   content={item.content}
                   likes_count={item.likes_count}

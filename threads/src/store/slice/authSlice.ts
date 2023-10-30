@@ -1,4 +1,4 @@
-import { seAuthToken } from "@/libs/api";
+import { setAuthToken } from "@/libs/api";
 import { IUser } from "@/types/User";
 import { createSlice } from "@reduxjs/toolkit";
 
@@ -17,7 +17,7 @@ export const authSlice = createSlice({
     AUTH_LOGIN: (_, action) => {
       const payload = action.payload
       console.log(payload);
-      seAuthToken(payload.token)
+      setAuthToken(payload.token)
       localStorage.setItem("token", payload.token)
 
       const user: IUser = {

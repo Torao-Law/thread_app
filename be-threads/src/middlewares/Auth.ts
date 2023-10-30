@@ -13,8 +13,8 @@ export default new class AuthenticationMiddlewares {
       const token = Authorization.split(" ")[1]
 
       try {
-        const logginSession = jwt.verify(token, "pinjam_seratus")
-        res.locals.logginSession = logginSession
+        const loginSession = jwt.verify(token, "pinjam_seratus")
+        res.locals.loginSession = loginSession
         next()
       } catch (err) {
         return res.status(401).json({ Error: "Unauthorized" })
