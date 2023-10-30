@@ -26,8 +26,13 @@ export default function Home() {
         { getThreads?.map((item: any) => {
             return (
               <Box key={item.id}>
+<<<<<<< HEAD
                 <ThreadCard
                   user={item.user}
+=======
+                <Threads
+                  user={item.users}
+>>>>>>> adee73a86eea3a28de2e1daebe0aba14e9d4f0e3
                   content={item.content}
                   likes_count={item.likes_count}
                   posted_at={item.posted_at}

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { Box, Image, Text, Button } from "@chakra-ui/react"
 import { useNavigate } from "react-router-dom"
 
@@ -10,6 +11,23 @@ export type ThreadCard = {
   likes_count?: number;
   replies_count?: number;
   is_liked: boolean;
+=======
+import { Box, Image, Text } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
+import  { IThreadCard } from "@/types/Thread";
+
+export type ThreadCard = {
+  id: number;
+  author_picture: string;
+  author_name: string;
+  author_username: string;
+  posted_at: string;
+  content: string;
+  image: string;
+  likes_count: number;
+  replies_count: number; 
+  users: User
+>>>>>>> adee73a86eea3a28de2e1daebe0aba14e9d4f0e3
 }
 
 interface User {
@@ -25,6 +43,7 @@ export function ThreadCard(props: ThreadCard) {
   const navigate: any = useNavigate()
 
   return (
+<<<<<<< HEAD
     <>
       <Box
         display={"flex"}
@@ -42,6 +61,30 @@ export function ThreadCard(props: ThreadCard) {
           borderRadius={"50%"}
           marginRight={"20px"}
         />
+=======
+    <Box
+      display={"flex"}
+      width="500px"
+      borderBottom={"1px solid white"}
+      padding={"20px 0px"}
+      bg={"transparent"} 
+      color={"white"}
+    >
+      <Image 
+        src={props.user?.picture ? props.user?.picture : "/img-profile.jpg"}
+        width={"50px"}
+        height={"50px"}
+        objectFit={"cover"}
+        borderRadius={"50%"}
+        marginRight={"20px"}
+      />
+      <Box>
+        <Box display={"flex"}>
+          <Text style={{fontWeight: "bold"}}>{props.user?.full_name}</Text>
+          <Text style={{color: "grey"}}>@{props.user?.username}</Text> 
+          <Text style={{color: "grey"}}>{props.posted_at}</Text>
+        </Box>
+>>>>>>> adee73a86eea3a28de2e1daebe0aba14e9d4f0e3
         <Box>
           <Box display={"flex"}>
             <Text>{props.user?.full_name}</Text>

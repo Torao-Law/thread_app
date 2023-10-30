@@ -1,14 +1,13 @@
-import { IThreadCard, IThreadPost } from "@/types/thread";
+import { IThreadCard, IThreadPost } from "@/types/Thread";
 import { API } from "@/libs/api";
-import { ChangeEvent, useState } from "react";
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { ChangeEvent, FormEvent, useState, useRef } from "react";
+import { useQuery } from '@tanstack/react-query';
 
 
 export function useThreads() {
   const [form, setForm] = useState<IThreadPost>({
     content: "",
-    image: "",
-    user: 1
+    image: ""
   });
   
   const { data: getThreads, refetch } = useQuery<IThreadCard[]>({
@@ -17,17 +16,39 @@ export function useThreads() {
       .then((res) => res.data)
   });
 
-  const handlePost = useMutation({
-    mutationFn: async () => await API.post("/thread", form),
-    onSuccess: () => refetch()
-  })
+  async function  handlePost(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
 
-  function handleChange(event: ChangeEvent<HTMLInputElement>) {
-    setForm({
-      ...form,
-      [event.target.name]: event.target.value,
-    });
+    const formData = new FormData()
+    formData.append("content", form.content)
+    formData.append("image", form.image as File)
+
+    await API.post("/thread", formData)
+    
+    refetch()
   }
 
-  return { form, getThreads, handleChange, handlePost };
+  function handleChange(event: ChangeEvent<HTMLInputElement>) {
+    const { name, value, files } = event.target
+
+    if(files) {
+      setForm({
+        ...form,
+        [name]: files[0],
+      })
+    } else {
+      setForm({
+        ...form,
+        [name]: value, 
+      });
+    }
+  }
+
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  function handleButtonClick() {
+    fileInputRef.current?.click()
+  }
+
+  return { form, getThreads, handleChange, handlePost, fileInputRef, handleButtonClick};
 }

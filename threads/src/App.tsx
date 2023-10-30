@@ -44,7 +44,7 @@ function App() {
       setIsLoading(false)
       navigate('/auth/login')
     }
-  }
+  }  
 
   useEffect(() => {
     if (localStorage.token) {
@@ -70,6 +70,17 @@ function App() {
     }
   }
 
+<<<<<<< HEAD
+=======
+  function IsLogin() {
+    if (auth.username) {
+      return <Navigate to="/" />
+    } else {
+      return <Outlet />
+    }
+  }
+  
+>>>>>>> adee73a86eea3a28de2e1daebe0aba14e9d4f0e3
   return (
     <>
       {

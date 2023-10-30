@@ -24,9 +24,9 @@ export function useLogin() {
   async function handleLogin() {
     try {
       const response = await API.post('/auth/login', form)
-      console.log(response?.data)
+      console.log(response.data)
       // redux store redux
-      dispatch(AUTH_LOGIN(response?.data))
+      dispatch(AUTH_LOGIN(response.data))
 
       navigate("/")
     } catch (error) {

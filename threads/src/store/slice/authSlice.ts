@@ -21,11 +21,11 @@ export const authSlice = createSlice({
       localStorage.setItem("token", payload.token)
 
       const user: IUser = {
-        id: payload.id,
-        full_name: payload.full_name,
-        username: payload.username,
-        email: payload.email,
-        picture: payload.picture,
+        id: payload.user.id,
+        full_name: payload.user.full_name,
+        username: payload.user.username,
+        email: payload.user.email,
+        picture: payload.user.picture,
       }
 
       return user

@@ -6,6 +6,7 @@ import {
   createThreadSchema, 
   updateThreadSchema,
 } from "../utils/validator/Thread";
+import { v2 as cloudinary } from 'cloudinary';
 
 export default new class ThreadServices {
   private readonly ThreadRepository: Repository<Thread> = AppDataSource.getRepository(Thread)
@@ -21,7 +22,7 @@ export default new class ThreadServices {
 
       let newResponse = [];
 
-      threads.forEach((data) => {0
+      threads.forEach((data) => {
         newResponse.push({
           ...data,
           likes_count: Math.floor(Math.random() * 10),
@@ -53,18 +54,42 @@ export default new class ThreadServices {
 
   async create(req: Request, res: Response) : Promise<Response> {
     try {
-      const data = req.body;
-
+      const user = res.locals.logginSession
+      const image= res.locals.filename
+      const data = {
+        content: req.body.content,
+        image
+      }
+      
       const { error } = createThreadSchema.validate(data);
       if(error) return res.status(400).json({ Error: error });
+      
+      // connecting to cloudinary
+      cloudinary.config({ 
+        cloud_name: 'dje5tgwuj', 
+        api_key: '451686618445968', 
+        api_secret: 'ik0zVU-GMVEXJI--0QK16fqU23M' 
+      });
+
+      // upload
+      const cloudinaryResponse = await cloudinary.uploader.upload(
+        "src/uploads/" + image,
+        { folder: "cirlce-app" }
+      ) // secure_url
 
       const thread = this.ThreadRepository.create({
         content: data.content,
-        image: data.image,
-        users: data.user
+        image: cloudinaryResponse.secure_url,
+        users: {
+          id: user.user.id
+        }
       });  
       
       const createdThread = await this.ThreadRepository.save(thread);
+
+      console.log(createdThread);
+      
+
       return res.status(201).json(createdThread);
     } catch (err) {
       return res.status(500).json({ Error: "Error while creating thread" });
