@@ -3,15 +3,38 @@ import AuthServices from "../services/AuthServices";
 
 
 export default new class AuthControllers {
-  register(req: Request, res: Response) {
-    AuthServices.register(req, res)
+  async register(req: Request, res: Response) {
+    try {
+      const response = await AuthServices.register(req.body);
+      return res.status(200).json(response);
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ error: "Something went wrong on the server!" });
+    }
   }
 
-  login(req: Request, res: Response) {
-    AuthServices.login(req, res)
+  async login(req: Request, res: Response) {
+    try {
+      const response = await AuthServices.login(req.body);
+      return res.status(200).json(response);
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ error: "Something went wrong on the server!" });
+    }
   }
 
-  check(req: Request, res: Response) {
-    AuthServices.check(req, res)
+  async check(req: Request, res: Response) {
+    try {
+      const loginSession = res.locals.loginSession;
+      const response = await AuthServices.check(loginSession);
+
+      return res.status(200).json(response);
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ error: "Something went wrong on the server!" });
+    }
   }
 }

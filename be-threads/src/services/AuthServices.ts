@@ -1,7 +1,7 @@
 import * as bcrypt from "bcrypt"
 import * as jwt from "jsonwebtoken"
 import { Repository } from "typeorm"
-import { User } from "../entities/user"
+import { User } from "../entities/User"
 import { AppDataSource } from "../data-source"
 import { Request, Response } from "express"
 import { registerSchema, loginSchema } from "../utils/validator/Auth"
@@ -9,21 +9,23 @@ import { registerSchema, loginSchema } from "../utils/validator/Auth"
 export default new class AuthServices {
   private readonly AuthRepository: Repository<User> = AppDataSource.getRepository(User)
 
-  async register(req: Request, res: Response): Promise<Response> {
+  async register(reqBody: any): Promise<any> {
     try {
-      const data = req.body
+      const { error, value } = registerSchema.validate(reqBody)
 
-      const { error, value } = registerSchema.validate(data)
+      if (error) {
+        throw new Error(error.details[0].message)
+      }
 
-      if (error) return res.status(400).json({ Error: error })
-      
       const isCheckEmail = await this.AuthRepository.count({
         where: {
           email: value.email
         }
       })
 
-      if (isCheckEmail > 0) return res.status(400).json({ Error: "Email already exists" })
+      if (isCheckEmail > 0) {
+        throw new Error("Email is already registered!")
+      }
 
       const hashedPassword = await bcrypt.hash(value.password, 10)
 
@@ -35,17 +37,18 @@ export default new class AuthServices {
       })
 
       const createdUser = await this.AuthRepository.save(user)
-      return res.status(201).json(createdUser)
+      return {
+        message: "Register success!",
+        user: user,
+      };
     } catch (err) {
-      return res.status(500).json({ Error: "Error while registering" })
+      throw new Error("Something went wrong on the server!");
     }
   }
 
-  async login(req: Request, res: Response): Promise<Response> {
+  async login(reqBody: any): Promise<any> {
     try {
-      const data = req.body
-
-      const { error, value } = loginSchema.validate(data)
+      const { error, value } = loginSchema.validate(reqBody)
 
       const isCheckEmail = await this.AuthRepository.findOne({
         where: {
@@ -54,13 +57,15 @@ export default new class AuthServices {
         select: ["id", "full_name", "email", "username", "password"]
       })
 
-      if (!isCheckEmail) return res.status(404).json({ Error: "Email not found" })
+      if (!isCheckEmail) {
+        throw new Error("Email not found")
+      }
 
       const isCheckPassword = await bcrypt.compare(value.password, isCheckEmail.password)
-      // isCheckPassword = false => !isCheckPassword = true
-      // isCheckPassword = true => !isCheckPassword = false
 
-      if (!isCheckPassword) return res.status(400).json({ Error: "Incorrect password" })
+      if (!isCheckPassword) {
+        throw new Error("Incorrect password")
+      }
 
       const user = this.AuthRepository.create({
         id: isCheckEmail.id,
@@ -69,33 +74,31 @@ export default new class AuthServices {
         username: isCheckEmail.username
       })
 
-      const token = await jwt.sign({ user }, "pinjam_seratus", { expiresIn: "1h" })
+      const token = await jwt.sign({ user }, process.env.SECRET_KEY, { expiresIn: "1h" })
 
-      return res.status(200).json({
+      return {
         user,
         token
-      })
+      }
     } catch (err) {
-      return res.status(500).json({ Error: "Error while logging in" })
+      throw new Error("Something went wrong on the server!");
     }
   }
 
-  async check(req: Request, res: Response): Promise<Response> {
+  async check(loginSession: any): Promise<any> {
     try {
-      const logginSession = res.locals.logginSession
-
       const user = await this.AuthRepository.findOne({
         where: {
-          id: logginSession.user.id
+          id: loginSession.user.id
         }
       })
 
-      return res.status(200).json({
-        user,
-        message: "You are logged in"
-      })
+      return {
+        message: "Token is valid!",
+        user: user,
+      };
     } catch (err) {
-      return res.status(500).json({ Error: "Error while checking" })
+      throw new Error("Something went wrong on the server!");
     }
   }
 }

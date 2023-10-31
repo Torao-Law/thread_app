@@ -10,6 +10,7 @@ import Home from "./pages/Home"
 import Register from "./pages/Register"
 import Main from "./layout/Main"
 import Login from "./pages/Login"
+import DetailThread from "./pages/DetailThread"
 
 const theme = extendTheme({
   styles: {
@@ -70,17 +71,6 @@ function App() {
     }
   }
 
-<<<<<<< HEAD
-=======
-  function IsLogin() {
-    if (auth.username) {
-      return <Navigate to="/" />
-    } else {
-      return <Outlet />
-    }
-  }
-  
->>>>>>> adee73a86eea3a28de2e1daebe0aba14e9d4f0e3
   return (
     <>
       {
@@ -93,6 +83,15 @@ function App() {
                 element={
                   <Main>
                     <Home />
+                  </Main>
+                }
+              />
+              
+              <Route
+                path="/thread/:id"
+                element={
+                  <Main>
+                    <DetailThread />
                   </Main>
                 }
               />

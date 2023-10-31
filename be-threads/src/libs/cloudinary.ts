@@ -11,7 +11,7 @@ export default new class CloudinaryConfig {
 
   async destination(image: any) {
     try {
-      const cloudinaryResponse = await cloudinary.uploader.upload("src/uploads/" + image)
+      const cloudinaryResponse = await cloudinary.uploader.upload(process.env.DESTINATION + image)
       return cloudinaryResponse.secure_url
     } catch (err) {
       throw err

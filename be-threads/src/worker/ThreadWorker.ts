@@ -1,6 +1,6 @@
 import * as amqp from "amqplib"
 import { Repository } from "typeorm"
-import { Thread } from "../entities/thread"
+import { Thread } from "../entities/Thread"
 import { AppDataSource } from "../data-source"
 import { EventEmitter } from "stream"
 import cloudinary from "../libs/cloudinary"
@@ -22,7 +22,7 @@ export default new class ThreadWorker{
   
             const thread = this.ThreadRepository.create({
               content: payload.content,
-              image: payload.image,
+              image: cloudinaryResponse,
               users: {
                 id: payload.user
               }
@@ -31,7 +31,7 @@ export default new class ThreadWorker{
             const threadResponse = await this.ThreadRepository.save(thread)
   
             this.emitter.emit("message")
-            console.log("(Worker) : Thread is create");
+            console.log("(Worker) : Thread is create", threadResponse);
             
             channel.ack(message)
           }

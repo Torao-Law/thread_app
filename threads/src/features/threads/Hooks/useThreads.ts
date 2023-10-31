@@ -2,21 +2,23 @@ import { IThreadCard, IThreadPost } from "@/types/Thread";
 import { API } from "@/libs/api";
 import { ChangeEvent, FormEvent, useState, useRef } from "react";
 import { useQuery } from '@tanstack/react-query';
+// import { useParams } from "react-router-dom";
 
 
 export function useThreads() {
+  // const { id } = useParams()
   const [form, setForm] = useState<IThreadPost>({
     content: "",
     image: ""
   });
-  
+
   const { data: getThreads, refetch } = useQuery<IThreadCard[]>({
-    queryKey: ['thread'],
-    queryFn: async () => await API.get('/threads')
+    queryKey: ['threads'],
+    queryFn: async () => await API.get('/threads?limit=5')
       .then((res) => res.data)
   });
 
-  async function  handlePost(event: FormEvent<HTMLFormElement>) {
+  async function handlePost(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
     const formData = new FormData()
@@ -24,6 +26,11 @@ export function useThreads() {
     formData.append("image", form.image as File)
 
     await API.post("/thread", formData)
+
+    setForm({
+      content: "",
+      image: ""
+    })
     
     refetch()
   }

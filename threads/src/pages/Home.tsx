@@ -23,22 +23,18 @@ export default function Home() {
         <FormThread />
 
         <Box>
-        { getThreads?.map((item: any) => {
+        { getThreads?.map((item) => {          
             return (
               <Box key={item.id}>
-<<<<<<< HEAD
                 <ThreadCard
-                  user={item.user}
-=======
-                <Threads
-                  user={item.users}
->>>>>>> adee73a86eea3a28de2e1daebe0aba14e9d4f0e3
+                  id={item.id}
+                  users={item?.users}
                   content={item.content}
                   likes_count={item.likes_count}
                   posted_at={item.posted_at}
                   replies_count={item.replies_count}
                   image={item.image}
-                  is_liked={item.is_liked}
+                  is_liked={item?.is_liked}
                 />
               </Box>
             );

@@ -13,7 +13,7 @@ export default new class AuthenticationMiddlewares {
       const token = Authorization.split(" ")[1]
 
       try {
-        const loginSession = jwt.verify(token, "pinjam_seratus")
+        const loginSession = jwt.verify(token, process.env.SECRET_KEY)
         res.locals.loginSession = loginSession
         next()
       } catch (err) {
@@ -24,7 +24,3 @@ export default new class AuthenticationMiddlewares {
     }
   }
 }
-
-// Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlMDkxZmNlYi1jNTI5LTQ2MzYtODhmNS01OWRjMzFmMjZkMGQiLCJlbWFpbCI6ImhpLmRhbmRpOUBnbWFpbC5jb20iLCJyb2xlcyI6W3siaWQiOiJVU0VSIiwibmFtZSI6IlVTRVIifV0sImlhdCI6MTY5ODI5MTU4NSwiZXhwIjoxNjk4Mzc3OTg1fQ.aBfO-jlSBEMPIXvNvOunJELUKzFswWSogvvtuAmpdXI
-
-// ["Bearer", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlMDkxZmNlYi1jNTI5LTQ2MzYtODhmNS01OWRjMzFmMjZkMGQiLCJlbWFpbCI6ImhpLmRhbmRpOUBnbWFpbC5jb20iLCJyb2xlcyI6W3siaWQiOiJVU0VSIiwibmFtZSI6IlVTRVIifV0sImlhdCI6MTY5ODI5MTU4NSwiZXhwIjoxNjk4Mzc3OTg1fQ.aBfO-jlSBEMPIXvNvOunJELUKzFswWSogvvtuAmpdXI"]

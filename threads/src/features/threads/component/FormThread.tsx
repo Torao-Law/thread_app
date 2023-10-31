@@ -3,7 +3,7 @@ import { BiSolidImageAdd } from "react-icons/bi"
 import { useThreads } from "@/features/threads/Hooks/useThreads"
 
 export default function FormThread() {
-  const { handlePost, handleChange, fileInputRef, handleButtonClick } = useThreads()
+  const { form, handlePost, handleChange, fileInputRef, handleButtonClick } = useThreads()
 
   return (
     <form onSubmit={handlePost} encType="multipart/form-data">
@@ -24,6 +24,7 @@ export default function FormThread() {
             placeholder="isikan apa yang kamu pikirkan..." 
             name="content" 
             onChange={handleChange} 
+            value={form.content}
           />
           <Button
             variant={"ghost"}

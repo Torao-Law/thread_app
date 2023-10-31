@@ -1,3 +1,4 @@
+import { Reply } from "./Reply";
 import { IUser } from "./User";
 
 export type IThreadPost = {
@@ -7,11 +8,12 @@ export type IThreadPost = {
 
 export type IThreadCard = {
   id?: number;
-  user: IUser;
+  users?: IUser;
   posted_at?: string;
   content?: string;
   image?: string;
   likes_count?: number;
   replies_count?: number;
-  is_liked: boolean;
+  replies?: Reply[];
+  is_liked?: boolean;
 }

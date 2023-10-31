@@ -32,7 +32,7 @@ export default new class ThreadQueue {
 
       return res.status(201).json({
         message: "Thread is queued !",
-        payload
+        data: payload
       })
     } catch (err) {
       return res.status(500).json({ message: "error in threadqueue method"})

@@ -1,10 +1,16 @@
 import { NextFunction, Request, Response } from "express";
 import * as multer from "multer";
 
-export const upload = (fieldName: string) => {
-  const storage = multer.diskStorage({
+export default class FileUpload {
+  private fieldName: string;
+
+  constructor(fieldName: string) {
+    this.fieldName = fieldName;
+  }
+
+  private storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, "src/uploads");
+      cb(null, process.env.DESTINATION);
     },
     filename: function (req, file, cb) {
       const uniqueSuffix = Date.now();
@@ -12,16 +18,15 @@ export const upload = (fieldName: string) => {
     },
   });
 
-  const uploadFile = multer({ storage: storage });
+  private uploadFile = multer({ storage: this.storage });
 
-  return (req: Request, res: Response, next: NextFunction) => {
-    uploadFile.single(fieldName)(req, res, function (error: any) {
-      if (error) {
-        return res.status(400).json({ error });
-      }
+  public handleUpload(req: Request, res: Response, next: NextFunction) {
+    this.uploadFile.single(this.fieldName)(req, res, function (error: any) {
+      if (error) return res.status(400).json({ error });
 
       res.locals.filename = req.file.filename;
       next();
     });
   };
-};
+}
+
