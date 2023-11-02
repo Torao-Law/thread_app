@@ -1,8 +1,11 @@
 import { Request, Response } from "express";
 import ThreadServices from "../services/ThreadServices";
 import ThreadQueue from "../queue/ThreadQueue";
+import { Route, Get, Post } from "tsoa";
 
-export default new class ThreadControllers {
+@Route("threads")
+export default class ThreadControllers {
+  @Get("/")
   async find(req: Request, res: Response) {
     try {
       const response = await ThreadServices.find(req.query);
@@ -15,6 +18,7 @@ export default new class ThreadControllers {
     }
   }
 
+  @Get("/{id}")
   async findOne(req: Request, res: Response) {
     try {
       const id = parseInt(req.params.id);
@@ -28,28 +32,8 @@ export default new class ThreadControllers {
     }
   }
   
+  @Post("/")
   create(req: Request, res: Response) {
     ThreadQueue.create(req, res)
   }
-
-  // async update(req: Request, res: Response) {
-  //   try {
-  //     const id = parseInt(req.params.id);
-  //     const data = req.body.content
-
-  //     console.log(data);
-      
-
-  //     const response = await ThreadServices.update(id, data);
-  //     return res.status(200).json(response);
-  //   } catch (err) {
-  //     return res
-  //       .status(500)
-  //       .json({ error: "Something went wrong on the server!" });
-  //   }
-  // }
-  
-  // delete(req: Request, res: Response) {
-  //   ThreadServices.delete(req, res)
-  // }
 }

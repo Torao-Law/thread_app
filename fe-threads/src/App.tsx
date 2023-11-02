@@ -6,6 +6,7 @@ import { useEffect, useState } from "react"
 import { AUTH_CHECK, AUTH_ERROR } from "./store/RootReducer"
 import { ChakraProvider, extendTheme } from "@chakra-ui/react"
 import { Routes, Route, Navigate, Outlet, useNavigate } from "react-router-dom"
+import { toast } from "react-toastify"
 import Home from "./pages/Home"
 import Register from "./pages/Register"
 import Main from "./layout/Main"
@@ -32,6 +33,24 @@ function App() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
+  async function testNotification() {
+    toast.info(
+      <p>
+        New threads are available! <a href="/">Check it out!</a>
+      </p>,
+      {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      }
+    );
+  }
+
   async function authCheck() {
     try {
       setAuthToken(localStorage.token)
@@ -46,6 +65,26 @@ function App() {
       navigate('/auth/login')
     }
   }  
+
+  useEffect(() => {
+    const sse = new EventSource("http://localhost:5000/api/v1/notifications");
+
+    async function getRealtimeData(data: any) {
+      console.log("Ini datanya cuy:", data);
+      testNotification();
+    }
+
+    sse.onopen = (e) => console.log("berhasil connect ! : ", e);
+    sse.onmessage = (e) => getRealtimeData(JSON.parse(e.data));
+    sse.onerror = () => {
+      console.log("Error SSE bro!");
+      sse.close();
+    };
+
+    return () => {
+      sse.close();
+    };
+  }, []);
 
   useEffect(() => {
     if (localStorage.token) {

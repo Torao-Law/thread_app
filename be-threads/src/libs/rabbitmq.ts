@@ -6,8 +6,6 @@ export default new class MessageQueue {
       const connection = await amqp.connect(process.env.RABBIT_MQ)
       const channel = await connection.createChannel()
 
-      console.log(connection)
-
       await channel.assertQueue(queueName)      
       channel.sendToQueue(queueName, Buffer.from(JSON.stringify(payload)))
 

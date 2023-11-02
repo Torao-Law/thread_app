@@ -25,7 +25,7 @@ export default new class ThreadQueue {
         content: value.content,
         image: value.image,
         user: loginSession.user.id
-      }
+      }      
 
       const errorQueue = await MessageQueue.MessageSend(process.env.THREAD, payload)
       if(errorQueue) return res.status(500).json({ message: "something error while sending message queue" })

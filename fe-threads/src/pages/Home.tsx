@@ -2,11 +2,15 @@ import { Box } from '@chakra-ui/react';
 import { ThreadCard } from '@/features/threads';
 import FormThread from '@/features/threads/component/FormThread';
 import { useThreads } from '@/features/threads/Hooks/useThreads';
+import { useEffect } from 'react';
 
 export default function Home() {
-  const { getThreads } = useThreads()
+  const { getThreads, refetch } = useThreads()
   console.log(getThreads);
   
+  useEffect(() => {
+    refetch()
+  }, [getThreads])
 
   return (
     <Box display={"flex"} justifyContent={"center"}>

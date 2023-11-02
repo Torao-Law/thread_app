@@ -1,13 +1,11 @@
-import * as amqp from "amqplib"
 import { Repository } from "typeorm"
 import { Thread } from "../entities/Thread"
 import { AppDataSource } from "../data-source"
-import { EventEmitter } from "stream"
 import cloudinary from "../libs/cloudinary"
+import { request } from "http"
 
 export default new class ThreadWorker{
   private readonly ThreadRepository: Repository<Thread> = AppDataSource.getRepository(Thread)
-  private emitter = new EventEmitter()
 
   async create(queueName: string, connection: any) {
     try {
@@ -29,8 +27,22 @@ export default new class ThreadWorker{
             })
   
             const threadResponse = await this.ThreadRepository.save(thread)
+
+            // request to server
+            const req = request({
+              hostname: "localhost",
+              port: 5000,
+              path: "/api/v1/new-thread",
+              method: "GET",
+            });
   
-            this.emitter.emit("message")
+            req.on("error", (error) => {
+              console.error("Error sending request:", error);
+            });
+
+            console.log("sending request")
+
+            req.end();
             console.log("(Worker) : Thread is create", threadResponse);
             
             channel.ack(message)

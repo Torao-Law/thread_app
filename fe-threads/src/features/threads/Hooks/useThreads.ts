@@ -26,12 +26,11 @@ export function useThreads() {
     formData.append("image", form.image as File)
 
     await API.post("/thread", formData)
-
+    
     setForm({
       content: "",
       image: ""
-    })
-    
+    }) 
     refetch()
   }
 
@@ -57,5 +56,5 @@ export function useThreads() {
     fileInputRef.current?.click()
   }
 
-  return { form, getThreads, handleChange, handlePost, fileInputRef, handleButtonClick};
+  return { form, getThreads, handleChange, handlePost, fileInputRef, handleButtonClick, refetch};
 }
