@@ -6,20 +6,16 @@ import FileUpload from '../middlewares/UploadFile'
 import LikeControllers from '../controllers/LikeControllers'
 import ReplyControllers from '../controllers/ReplyControllers'
 import ThreadQueue from '../queue/ThreadQueue'
+import UserControllers from '../controllers/UserControllers'
+import FollowControllers from '../controllers/FollowControllers'
 
 const router = express.Router()
 const UploadMiddleware = new FileUpload("image")
-const Thread = new ThreadControllers()
 
 // CRUD Threads
-router.get("/threads", async (req: express.Request, res: express.Response) => {
-   await Thread.find(req, res)
-})
-
-router.get("/thread/:id", async (req: express.Request, res: express.Response) => {
-  await Thread.findOne(req, res);
-});
-
+router.get("/threads", AuthenticationMiddlewares.Authentication, ThreadControllers.find)
+router.get("/detail-thread/:id", AuthenticationMiddlewares.Authentication,  ThreadControllers.findOne)
+router.get("/thread/:id", AuthenticationMiddlewares.Authentication,  ThreadControllers.findOneByUserId)
 router.post("/thread", AuthenticationMiddlewares.Authentication, UploadMiddleware.handleUpload.bind(UploadMiddleware), ThreadQueue.create)
 
 // AUTH 
@@ -27,12 +23,21 @@ router.post("/auth/register", AuthControllers.register)
 router.post("/auth/login", AuthControllers.login)
 router.get("/auth/check", AuthenticationMiddlewares.Authentication, AuthControllers.check)
 
+// USERS
+router.get("/users", AuthenticationMiddlewares.Authentication, UserControllers.find)
+router.get("/user/:id", AuthenticationMiddlewares.Authentication, UserControllers.findOne)
+router.patch("/user/:id", AuthenticationMiddlewares.Authentication, UploadMiddleware.handleUpload.bind(UploadMiddleware), UserControllers.update)
+
 // LIKE
 router.post("/like", AuthenticationMiddlewares.Authentication, LikeControllers.create)
 
 // REPLY'
 router.post("/reply", AuthenticationMiddlewares.Authentication, ReplyControllers.create)
 router.get("/replies", AuthenticationMiddlewares.Authentication, ReplyControllers.find)
+
+// FOLLOW
+router.post("/follow", AuthenticationMiddlewares.Authentication, FollowControllers.followed)
+router.get("/follow", AuthenticationMiddlewares.Authentication, FollowControllers.find)
 
 // NOTIFICATION
 router.get("/notifications", (req: express.Request, res: express.Response) => {

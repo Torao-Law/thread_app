@@ -13,9 +13,7 @@ export default new class AuthServices {
     try {
       const { error, value } = registerSchema.validate(reqBody)
 
-      if (error) {
-        throw new Error(error.details[0].message)
-      }
+      if (error) throw new Error(error.details[0].message)
 
       const isCheckEmail = await this.AuthRepository.count({
         where: {
@@ -41,6 +39,7 @@ export default new class AuthServices {
         message: "Register success!",
         user: user,
       };
+      
     } catch (err) {
       throw new Error("Something went wrong on the server!");
     }
@@ -54,8 +53,10 @@ export default new class AuthServices {
         where: {
           email: value.email
         },
-        select: ["id", "full_name", "email", "username", "password"]
+        // select: ["id", "full_name", "email", "username", "password", "picture", "description"]
       })
+
+      console.log(isCheckEmail)
 
       if (!isCheckEmail) {
         throw new Error("Email not found")
@@ -71,13 +72,14 @@ export default new class AuthServices {
         id: isCheckEmail.id,
         full_name: isCheckEmail.full_name,
         email: isCheckEmail.email,
-        username: isCheckEmail.username
+        username: isCheckEmail.username,
+        description: isCheckEmail.description,
+        image: isCheckEmail.image
       })
 
       const token = await jwt.sign({ user }, process.env.SECRET_KEY, { expiresIn: "1h" })
 
       return {
-        user,
         token
       }
     } catch (err) {

@@ -11,30 +11,35 @@ export default function FormLogin() {
       flexDirection={"column"}
       gap={3}
       width={"350px"}
-      bg={"transparent"} 
-      color={"white"}
-      border={"1px solid white"}
       borderRadius={10}
       padding={5}
+      boxShadow={"0 0px 6px rgba(50, 50, 93, 0.5), 0 1px 3px rgba(0, 0, 0, 0.08)"} 
     >
-      <Text color={"brand.green"} fontSize={"2xl"} fontWeight={"bold"}>
-        Connect
-      </Text>
-      <Text fontSize={"2xl"} fontWeight={"bold"}>
-        Login Connect
+      <Text 
+        color={"green"} 
+        fontSize={"2xl"} 
+        fontWeight={"bold"}
+        textAlign={"center"}
+        mb={3}
+        >
+        LOGIN
       </Text>
       <Input 
+        border={"2px solid #d3d3d3"}
+        fontSize={"sm"}
         placeholder="Email" 
         name="email" 
         onChange={handleChange}          
-      />
+        />
       <Input 
+        border={"2px solid #d3d3d3"}
+        fontSize={"sm"}
         type="password" 
         placeholder="Password" 
         name="password" 
         onChange={handleChange}    
       />
-      <Box display="flex" justifyContent={"flex-end"}>
+      <Box display="flex" justifyContent={"flex-end"} fontSize={"sm"}>
         <Text>Forgot password?</Text>
       </Box>
       <Button 

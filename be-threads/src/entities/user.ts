@@ -18,11 +18,11 @@ export class User {
   @Column()
   email: string;
 
-  @Column({ select: false })
+  @Column()
   password: string;
 
   @Column({ nullable: true })
-  picture: string;
+  image: string;
 
   @Column({ nullable: true })
   description: string;

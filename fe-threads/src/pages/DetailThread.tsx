@@ -21,14 +21,13 @@ export default function DetailThread() {
 
   async function getOneThread() {
     try {
-      const response = await API.get(`/thread/${id}`)
+      const response = await API.get(`/detail-thread/${id}`)
       
-      setData(response.data)
+      setData(response.data[0])
     } catch (err) {
       console.log(err);
     }
   }
-  
 
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
     setReply({
@@ -42,6 +41,10 @@ export default function DetailThread() {
       event.preventDefault();
       
       await API.post("/reply", reply)
+      setReply({
+        content: "",
+        thread_id: 0
+      })
       refetch()
     } catch (err) {
       console.log(err);
@@ -54,90 +57,87 @@ export default function DetailThread() {
      .then(res => res.data)
   })
 
-  console.log(data);
-  
-
   return (
     <Box display={"flex"} justifyContent={"center"}>
       <Box
         display={"flex"}
         alignItems={"center"}
         flexDirection={"column"}
-        padding={"20px"}
-        width="600px"
-        borderRight={"1px solid"}
-        borderLeft={"1px solid"}
+        paddingY={"20px"}
+        width="660px"
+        marginLeft={"-30px"}
         borderColor={"brand.grey"}
       >
         <ThreadCard
           id={data?.id}
           users={data?.users}
           content={data?.content}
-          likes_count={data?.likes_count}
+          likes_count={data?.likes?.length}
           posted_at={data?.posted_at}
           replies_count={data?.replies_count}
           image={data?.image}
-          is_liked={data?.is_liked}
+          likes={data?.likes}
         />
-        <Box marginTop={"20px"}>
-            <form 
-              onSubmit={handlePost} 
-              encType="multipart/form-data"
-            >
-              <FormControl display={"flex"} flexDirection={"column"} gap={2} color={"white"}>
-                <Box
-                  display={"flex"}
-                  justifyContent={"center"}
-                  alignItems={"center"}
-                  gap={2}
-                >
-                  <Input
-                    placeholder="What is happening?!"
-                    name="content"
-                    onChange={handleChange}
-                  />
-                  <Button
-                    type="submit"
-                    backgroundColor={"brand.green"}
-                    color={"white"}
-                    colorScheme="green"
-                    // value={"Post"}
-                    fontSize={"12px"}
-                    width={"70px"}
-                  >Post</Button>
-                </Box>
-              </FormControl>
-            </form>
-
-            { getReply?.map((data: any, index: any) => (
-              <Box 
-                key={index}
+        <Box marginTop={"20px"} width={"100%"} paddingX={5}>
+          <form 
+            onSubmit={handlePost} 
+            encType="multipart/form-data"
+          >
+            <FormControl display={"flex"} flexDirection={"column"} gap={2} >
+              <Box
                 display={"flex"}
-                width="500px"
-                borderBottom={"1px solid white"}
-                padding={"20px 0px"}
-                bg={"transparent"} 
-                color={"white"}
+                justifyContent={"center"}
+                alignItems={"center"}
+                gap={2}
               >
-                <Image
-                  src={data.users?.picture ? data.users?.picture : "https://i.pinimg.com/564x/bc/c6/e1/bcc6e12a3bef4190e0f8f1a14885c321.jpg"}
-                  width={"50px"}
-                  height={"50px"}
-                  objectFit={"cover"}
-                  borderRadius={"50%"}
-                  marginRight={"20px"}
+                <Input
+                  placeholder="What is happening?!"
+                  name="content"
+                  onChange={handleChange}
+                  value={reply.content}
                 />
-
-                <Box>
-                  <Box display={"flex"}>
-                    <Text color={"grey"}>{data.users?.full_name}</Text>
-                    <Text ms={2} color="grey">@{data.users?.username}</Text>
-                  </Box>
-                  <Text>{data.content}</Text>
-                </Box>                
+                <Button
+                  type="submit"
+                  backgroundColor={"brand.green"}
+                  colorScheme="green"
+                  fontSize={"12px"}
+                  width={"70px"}
+                >Post</Button>
               </Box>
-            ))}
-          </Box>
+            </FormControl>
+          </form>
+
+          { getReply?.map((data: any, index: any) => (
+            <Box 
+              key={index}
+              display={"flex"}
+              width="660px"
+              borderBottom={"1px solid #d3d3d3"}
+              padding={"20px 0px"}
+              bg={"transparent"} 
+              marginLeft={"-20px"}
+            >
+              <Image
+                ms={6}
+                src={data.users?.picture ? data.users?.picture : "https://i.pinimg.com/564x/bc/c6/e1/bcc6e12a3bef4190e0f8f1a14885c321.jpg"}
+                width={"50px"}
+                height={"50px"}
+                objectFit={"cover"}
+                borderRadius={"50%"}
+                marginRight={"20px"}
+              />
+
+              <Box>
+                <Box display={"flex"} alignItems={'center'}>
+                  <Text fontWeight={"bold"}>{data.users?.full_name}</Text>
+                  <Text ms={2} color="grey" fontSize={"sm"}>@{data.users?.username}</Text>
+                </Box>
+            
+                <Text>{data?.content}</Text>
+              </Box>                
+            </Box>
+          ))}
+        </Box>
       </Box>
     </Box>
   )

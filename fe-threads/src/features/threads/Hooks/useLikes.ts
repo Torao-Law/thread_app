@@ -1,11 +1,22 @@
 import { API } from "@/libs/api"
+// import { useThreads } from "./useThreads"
 
 export default function useLikes() {
-  async function handleLike(id: number | undefined) {
+  // const { getThreads } = useThreads()
+
+  // console.log(getThreads)
+
+  async function handleLike(id?: number ) {
+    // try {
+
+    // }
     await API.post("/like", { thread_id: id})
   }
 
+
+
   return {
-    handleLike
+    handleLike,
+    //  getLike, refetch
   }
 }

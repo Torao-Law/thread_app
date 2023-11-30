@@ -24,7 +24,9 @@ export default class FileUpload {
     this.uploadFile.single(this.fieldName)(req, res, function (error: any) {
       if (error) return res.status(400).json({ error });
 
-      res.locals.filename = req.file.filename;
+      if (req.file) {
+        res.locals.filename = req.file.filename;
+      }
       next();
     });
   };

@@ -13,8 +13,7 @@ export default new class WorkerHub {
         const connection = await amqp.connect(process.env.RABBIT_MQ)
 
         // create worker anymore
-        const resp = await ThreadWorker.create(process.env.THREAD, connection)
-        console.log(resp)
+        await ThreadWorker.create(process.env.THREAD, connection)
       })
       .catch((err) => console.log(err))
   }

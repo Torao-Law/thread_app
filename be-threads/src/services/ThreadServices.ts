@@ -33,25 +33,33 @@ export default new class ThreadServices {
   }
   
 
-  async findOne(id: number): Promise<any> {
+  async findOne(id: number): Promise<any[]> {
     try {
-      const thread = await this.ThreadRepository.findOne({
+      const thread = await this.ThreadRepository.find({
         where: {
           id: id,
         },
         relations: ["users", "replies", "likes"],
       });
 
-      console.log(thread);
-      
+      return thread;
+    } catch (err) {
+      throw new Error("Something wrong in server!");
+    }
+  }
 
-      const newResponse = {
-        ...thread,
-        replies_count: thread.replies.length,
-        likes_count: thread.likes.length,
-      };
+  async findOneById(id: number): Promise<any[]> {
+    try {
+      const thread = await this.ThreadRepository.find({
+        where: {
+          users: {
+            id: id,
+          }
+        },
+        relations: ["users", "replies", "likes"],
+      });
 
-      return newResponse;
+      return thread;
     } catch (err) {
       throw new Error("Something wrong in server!");
     }

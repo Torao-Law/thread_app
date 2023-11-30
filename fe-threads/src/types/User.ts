@@ -4,6 +4,7 @@ export type IUser = {
   username?: string;
   email?: string;
   picture?: string;
+  description?: string;
 }
 
 export type IUserRegister = {

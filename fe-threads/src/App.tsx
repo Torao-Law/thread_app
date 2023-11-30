@@ -4,7 +4,7 @@ import { useSelector } from "react-redux"
 import { API, setAuthToken } from "./libs/api"
 import { useEffect, useState } from "react"
 import { AUTH_CHECK, AUTH_ERROR } from "./store/RootReducer"
-import { ChakraProvider, extendTheme } from "@chakra-ui/react"
+import { ChakraProvider } from "@chakra-ui/react"
 import { Routes, Route, Navigate, Outlet, useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
 import Home from "./pages/Home"
@@ -12,21 +12,10 @@ import Register from "./pages/Register"
 import Main from "./layout/Main"
 import Login from "./pages/Login"
 import DetailThread from "./pages/DetailThread"
+import ListUser from "./pages/ListUser"
+import Profile from "./pages/Profile"
+import Follow from "./pages/Follow"
 
-const theme = extendTheme({
-  styles: {
-    global: {
-      body: {
-        bg: 'darkBackground',
-      }
-    }
-  },
-  colors: {
-    darkBackground: '#222'
-  }
-})
-
-// setAuthToken => apakah sudah token ? akses : login/register
 function App() {
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const auth = useSelector((state: RootState) => state.auth)
@@ -114,7 +103,7 @@ function App() {
     <>
       {
         isLoading ? null : 
-          <ChakraProvider theme={theme}>
+          <ChakraProvider>
           <Routes>
             <Route path="/" element={<IsNotLogin />}>
               <Route
@@ -133,6 +122,29 @@ function App() {
                     <DetailThread />
                   </Main>
                 }
+              />
+
+              <Route
+                path="/search"
+                element={
+                  <Main>
+                    <ListUser />
+                  </Main>
+                }
+              />
+
+              <Route
+                path="/follow"
+                element={
+                  <Main>
+                    <Follow />
+                  </Main>
+                }
+              />
+
+              <Route
+                path="/profile/:id"
+                element={ <Profile /> }
               />
             </Route> 
             

@@ -4,11 +4,13 @@ import { API } from "@/libs/api";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { AUTH_LOGIN } from "@/store/RootReducer";
+import { jwtDecode } from "jwt-decode";
 
 export function useLogin() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  // const [isLoading, setIsLoading] = useState<boolean>(true)
   const [form, setForm] = useState<IUserlogin>({
     email: "",
     password: "",
@@ -24,9 +26,11 @@ export function useLogin() {
   async function handleLogin() {
     try {
       const response = await API.post('/auth/login', form)
-      console.log(response.data)
-      // redux store redux
-      dispatch(AUTH_LOGIN(response.data))
+      const objDecode = await jwtDecode(response.data.token)
+      
+      const obj = { ...response.data, ...objDecode}
+      
+      dispatch(AUTH_LOGIN(obj))
 
       navigate("/")
     } catch (error) {

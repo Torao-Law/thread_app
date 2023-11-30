@@ -15,12 +15,20 @@ export default new class ThreadWorker{
         try {
           if(message !== null) {
             const payload = JSON.parse(message.content.toString())
+
+            let isEmptyImage = null
+            console.log(payload)
+            if(payload.image !== null) {
+              console.log(payload.image)
+              const cloudinaryResponse = await cloudinary.destination(payload.image)
+              isEmptyImage = cloudinaryResponse
+            }
+            console.log(isEmptyImage)
   
-            const cloudinaryResponse = await cloudinary.destination(payload.image)
   
             const thread = this.ThreadRepository.create({
               content: payload.content,
-              image: cloudinaryResponse,
+              image: isEmptyImage,
               users: {
                 id: payload.user
               }

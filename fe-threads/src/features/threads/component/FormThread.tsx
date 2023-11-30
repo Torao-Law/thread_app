@@ -4,15 +4,15 @@ import { useThreads } from "@/features/threads/Hooks/useThreads"
 
 export default function FormThread() {
   const { form, handlePost, handleChange, fileInputRef, handleButtonClick } = useThreads()
-
+  
   return (
-    <form onSubmit={handlePost} encType="multipart/form-data">
+    // <form onClick={() => handlePost.mutate()} encType="multipart/form-data">
       <FormControl 
         display={"flex"} 
         flexDirection={"column"} 
         gap={2} 
         bg={"transparent"}  
-        color={"white"}
+        width={"100%"}
       >
         <FormLabel>Content</FormLabel>
         <Box
@@ -21,10 +21,20 @@ export default function FormThread() {
           alignItems={"center"}
         >
           <Input 
-            placeholder="isikan apa yang kamu pikirkan..." 
+            placeholder="Apa yang sedang kamu pikirkan..."
+            height={"100px"}
             name="content" 
             onChange={handleChange} 
             value={form.content}
+            sx={{
+              "&::placeholder": {
+                textAlign: "left",
+                verticalAlign: "top",
+                lineHeight: "1.5",
+                color: "gray.500",
+                fontSize: "sm",
+              },
+            }}
           />
           <Button
             variant={"ghost"}
@@ -51,13 +61,14 @@ export default function FormThread() {
               backgroundColor={"green"} 
               color={"white"} 
               colorScheme="green" 
-              type="submit"
+              // type="submit"
+              onClick={() => handlePost.mutate()}
             >
               Submit
             </Button>
           </Box>
         </Box>
       </FormControl>
-    </form>
+    // </form>
   )
 }

@@ -15,7 +15,7 @@ export default new class ThreadQueue {
 
       const data = {
         content: req.body.content,
-        image: res.locals.filename
+        image: res.locals.filename || null
       }
 
       const { error, value } = createThreadSchema.validate(data)

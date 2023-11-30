@@ -8,6 +8,7 @@ const initiaslState: IUser = {
   username: "",
   email: "",
   picture: "",
+  description: ""
 }
 
 export const authSlice = createSlice({
@@ -16,7 +17,6 @@ export const authSlice = createSlice({
   reducers: {
     AUTH_LOGIN: (_, action) => {
       const payload = action.payload
-      console.log(payload);
       setAuthToken(payload.token)
       localStorage.setItem("token", payload.token)
 
@@ -25,7 +25,8 @@ export const authSlice = createSlice({
         full_name: payload.user.full_name,
         username: payload.user.username,
         email: payload.user.email,
-        picture: payload.user.picture,
+        description: payload.user.description,
+        picture: payload.user.picture
       }
 
       return user
@@ -39,6 +40,7 @@ export const authSlice = createSlice({
         username: payload.username,
         email: payload.email,
         picture: payload.picture,
+        description: payload.description
       }
 
       return user

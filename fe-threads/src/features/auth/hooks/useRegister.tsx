@@ -1,8 +1,11 @@
 import { useState, ChangeEvent } from "react";
+import { useNavigate } from "react-router-dom";
 import { IUserRegister } from "@/types/User";
 import { API } from "@/libs/api";
 
 export function useRegister() {
+  const navigate: any = useNavigate()
+  
   const [form, setForm] = useState<IUserRegister>({
     full_name: "",
     username: "",
@@ -19,10 +22,10 @@ export function useRegister() {
 
   async function handleRegister() {
     try {
-      const response = await API.post('/auth/register', form)
-      console.log(response)
+      await API.post('/auth/register', form)
+      navigate("/auth/login")
     } catch (error) {
-      console.log(error)
+      throw new Error
     }
   }
 
