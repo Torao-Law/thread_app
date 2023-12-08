@@ -1,25 +1,49 @@
 import React from 'react'
+import { API } from '@/libs/api'
 import { Follows } from '@/features/follows'
+import { RootState } from '@/store/type/RootState'
+import { useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
+import { GET_FOLLOWS, SET_FOLLOW_STATE } from '@/store/RootReducer'
 import { Box, Text } from '@chakra-ui/react'
-import useFollow from '@/features/follows/hooks/useFollows'
 
 export default function Follow() {
+  const dispatch = useDispatch()
+  const followState = useSelector((state: RootState) => state.follow.followState)
+  const follows = useSelector((state: RootState) => state.follow.follows)
   const [isActiveFollowers, setIsActiveFollowers] = React.useState<boolean>(true)
   const [isActiveFollowing, setIsActiveFollowing] = React.useState<boolean>(!isActiveFollowers)
-  const { listFollow, getFollow } = useFollow()
 
   React.useEffect(() => {
-    getFollow("followers")
+    async function fetch() {
+      try {
+        const response = await API.get(`/follows?type=followers`);
+        dispatch(GET_FOLLOWS(response.data));
+      } catch (err) {
+        throw err
+      }
+    }
+
+    fetch()
   }, [])
 
-  const handleActiveFollowers = () => {
-    getFollow("followers")
+  React.useEffect(() => {
+    getFollowData()
+  }, [followState])
+
+  async function getFollowData() {
+    const response = await API.get(`/follows?type=${followState}`);
+    dispatch(GET_FOLLOWS(response.data));
+  }
+
+  const handleActiveFollowers = async () => {
+    dispatch(SET_FOLLOW_STATE("followers"))
     setIsActiveFollowing(!isActiveFollowing)
     setIsActiveFollowers(!isActiveFollowers)
   }
-
-  const handleActiveFollowing = () => {
-    getFollow("followings")
+  
+  const handleActiveFollowing = async () => {
+    dispatch(SET_FOLLOW_STATE("followings"))
     setIsActiveFollowing(!isActiveFollowing)
     setIsActiveFollowers(!isActiveFollowers)
   }
@@ -28,10 +52,9 @@ export default function Follow() {
     <Box display={"flex"} justifyContent={"center"}>
       <Box
         display={"flex"}
-        // alignItems={"center"}
         flexDirection={"column"}
         paddingY={"20px"}
-        width="660px"
+        minWidth="650px"
         marginLeft={"-30px"}
         borderColor={"brand.grey"}
       >
@@ -67,8 +90,20 @@ export default function Follow() {
           </Box>
         </Box>
 
-        <Box>
-          <Follows listFollow={listFollow}/>
+        <Box px={4}>
+          {follows.map((follow, index) => (
+            <Follows
+              key={index}
+              id={follow.id}
+              user_id={follow.user_id}
+              full_name={follow.full_name}
+              username={follow.username}
+              email={follow.email}
+              picture={follow.picture}
+              description={follow.description}
+              is_followed={follow.is_followed}
+            />
+          ))}
         </Box>
       </Box>
     </Box>

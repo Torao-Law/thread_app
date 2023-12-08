@@ -1,7 +1,12 @@
-import { IUser } from '@/types/User'
+import { RootState } from '@/store/type/RootState'
 import { Box, Avatar, Text, Button } from '@chakra-ui/react'
+import { useSelector } from 'react-redux'
 
-export default function CardUser(props: IUser) {
+export default function CardUser(props: any) {
+  const auth = useSelector((root: RootState) => root.auth)
+  // console.log(auth);
+  
+  // console.info(props)
   return (
     <Box 
       display={"flex"} 
@@ -34,11 +39,11 @@ export default function CardUser(props: IUser) {
       </Box>
       <Button 
         size={"sm"} 
-        variant={"outline"}
+        variant= {props.isFollowing ? 'outline' : 'solid' }
+        colorScheme='green'
         borderRadius={'full'}
-        borderColor={"gray"}
       >
-        Follow
+        {props.isFollowing ? "Unfollow" : "Follow"}
       </Button>
     </Box>
   )

@@ -5,14 +5,9 @@ import React from 'react'
 
 export function SuggestedFollow() {
   const { suggestFollow } = useSuggestFollow()
-  const { listFollow, getFollow, follow } = useFollow()
-  React.useEffect(() => {
-    getFollow("followings")
-  }, [])
-  console.log(suggestFollow);
-  console.log(listFollow);
+  const { handleFollow } = useFollow() 
   
-  
+
   return (
     <Box display={"flex"} width={"300px"} height={"fit-content"} >
         <Card 
@@ -59,7 +54,7 @@ export function SuggestedFollow() {
                 variant={"outline"}
                 borderRadius={'full'}
                 borderColor={"gray"}
-                onClick={() => follow(item?.id)}
+                onClick={() => handleFollow(item?.id, item.user_id, item.is_followed)}
               >
                 Follow
               </Button>

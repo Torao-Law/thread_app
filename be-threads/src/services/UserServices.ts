@@ -1,16 +1,26 @@
 import { Repository } from "typeorm"
 import { User } from "../entities/User"
 import { AppDataSource } from "../data-source"
+import { Follow } from "../entities/Follow"
 
 export default new class UserSevices {
   private readonly UserRepository: Repository<User> = AppDataSource.getRepository(User)
+  private readonly FollowRepository: Repository<Follow> = AppDataSource.getRepository(Follow)
 
   async find(id: number) : Promise<any>  {
     try {
       const arr = await this.UserRepository.find()
 
-      const users = this.removeIdLogin(arr, id)
-      return users
+      const following = await this.FollowRepository.find({
+        where: {
+          followers: {
+            id
+          }
+        },
+        relations: ['following']
+      })
+
+      return await this.matchFollowing(arr, following)
     } catch (err) {
       throw new Error("Something wrong in find service users !");
     }
@@ -35,9 +45,14 @@ export default new class UserSevices {
     }
   }
 
-  private removeIdLogin(dataUser: any, id: number) : any {
-    const res = dataUser.filter(obj => obj.id !== id)
+  private matchFollowing(user: any, following: any) : any {
+    return user.map((item: any) => {
+      const isFollowing = !!following.find((itemFind: any) => itemFind.following.id == item.id)
 
-    return res
+      return {
+        ...item,
+        isFollowing
+      }
+    })
   }
 }

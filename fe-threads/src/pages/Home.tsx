@@ -98,7 +98,7 @@ export default function Home() {
                   posted_at={item.posted_at}
                   replies_count={item.replies_count}
                   image={item.image}
-                  likes={item.likes}
+                  is_liked={item.is_liked}
                 />
               </Box>
             );

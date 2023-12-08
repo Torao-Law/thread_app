@@ -1,12 +1,12 @@
 import { Request, Response } from "express";
 import ThreadServices from "../services/ThreadServices";
 import ThreadQueue from "../queue/ThreadQueue";
-import { Route, Get, Post } from "tsoa";
 
 export default new class ThreadControllers {
   async find(req: Request, res: Response) {
     try {
-      const response = await ThreadServices.find(req.query);
+      const loginSession = res.locals.loginSession
+      const response = await ThreadServices.find(req.query, loginSession);
       
       return res.status(200).json(response);
     } catch (err) {

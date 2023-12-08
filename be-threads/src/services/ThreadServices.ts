@@ -7,27 +7,27 @@ import { createThreadSchema, updateThreadSchema } from "../utils/validator/Threa
 export default new class ThreadServices {
   private readonly ThreadRepository: Repository<Thread> = AppDataSource.getRepository(Thread)
 
-  async find(reqQuery?: any): Promise<any> {
+  async find(reqQuery?: any, loginSession?: any): Promise<any> {
     try {
       const limit = parseInt(reqQuery.limit as string);
   
       const threads = await this.ThreadRepository.find({
-        relations: ["users", "likes", "replies"],
+        relations: ["users", "likes.user", "replies"],
         order: {
           id: "DESC",
         },
         take: limit,
       });
-  
+
       let newResponse = threads.map(element => ({
         ...element,
         replies_count: element.replies.length,
         likes_count: element.likes.length,
-      }));
-  
+        is_liked: element.likes.some((like: any) => like.user.id == loginSession.user.id )
+      }));      
+
       return newResponse;
     } catch (err) {
-      console.error("Error in ThreadsService:", err); // Log the actual error
       throw new Error("Something went wrong in server!");
     }
   }
@@ -39,7 +39,10 @@ export default new class ThreadServices {
         where: {
           id: id,
         },
-        relations: ["users", "replies", "likes"],
+        relations: ["users", "replies", "likes.user"],
+        order: {
+          id: "DESC"
+        }
       });
 
       return thread;
@@ -56,10 +59,20 @@ export default new class ThreadServices {
             id: id,
           }
         },
-        relations: ["users", "replies", "likes"],
+        relations: ["users", "replies", "likes.user"],
+        order: {
+          id: "DESC"
+        }
       });
+      
+      let newResponse = thread.map(element => ({
+        ...element,
+        replies_count: element.replies.length,
+        likes_count: element.likes.length,
+        is_liked: element.likes.some((like: any) => like.user.id == id )
+      }));      
 
-      return thread;
+      return newResponse;
     } catch (err) {
       throw new Error("Something wrong in server!");
     }
@@ -67,7 +80,6 @@ export default new class ThreadServices {
 
   async update(id: number, reqBody: any): Promise<any> {
     try {
-      console.log(reqBody);
       
       const thread = await this.ThreadRepository.findOne({
         where: {

@@ -8,32 +8,29 @@ import { useParams } from "react-router-dom"
 import { AiFillEdit } from "react-icons/ai";
 import { ThreadCard } from '@/features/threads'
 import EditProfileModal from '@/features/profile/components/EditProfileModal'
-import useFollow from '@/features/follows/hooks/useFollows'
+import { API } from '@/libs/api'
 
 export default function Profile() {
   const auth = useSelector((state: RootState) => state.auth)
-
   const { id } = useParams()
   const { getThreadId } = useThreads();
-  const { counting } = useFollow()
+  const { isOpen, onOpen, onClose } = useDisclosure()
   const [threadById, setThreadById] = React.useState([])
   const [countFollow, setCountFollow] = React.useState({
     followers: 0,
     followings: 0
   })
-  const { isOpen, onOpen, onClose } = useDisclosure()
   
-  
-  
-
   React.useEffect(() => {
     async function fetch() {
       try {
         const thread = await getThreadId(id)
-        const follow = await counting()
+        const sumFollowers = await API.get(`/follows?type=followers`);
+        const sumFollowings = await API.get(`/follows?type=followings`);
+        
         setCountFollow({
-          followers: follow.countFollowers,
-          followings: follow.countFollowings
+          followers: sumFollowers.data.length,
+          followings: sumFollowings.data.length
         })
         
         setThreadById(thread)
@@ -45,6 +42,8 @@ export default function Profile() {
     fetch()
   }, [])
  
+  console.log(threadById);
+  
 
   return (
     <>
@@ -175,7 +174,7 @@ export default function Profile() {
                   posted_at={item.posted_at}
                   replies_count={item.replies_count}
                   image={item.image}
-                  likes={item.likes}
+                  is_liked={item.is_liked}
                 />
               </Box>
             ))}

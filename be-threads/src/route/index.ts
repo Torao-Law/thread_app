@@ -7,7 +7,7 @@ import LikeControllers from '../controllers/LikeControllers'
 import ReplyControllers from '../controllers/ReplyControllers'
 import ThreadQueue from '../queue/ThreadQueue'
 import UserControllers from '../controllers/UserControllers'
-import FollowControllers from '../controllers/FollowControllers'
+import FollowsController from '../controllers/FollowControllers'
 
 const router = express.Router()
 const UploadMiddleware = new FileUpload("image")
@@ -36,8 +36,12 @@ router.post("/reply", AuthenticationMiddlewares.Authentication, ReplyControllers
 router.get("/replies", AuthenticationMiddlewares.Authentication, ReplyControllers.find)
 
 // FOLLOW
-router.post("/follow", AuthenticationMiddlewares.Authentication, FollowControllers.followed)
-router.get("/follow", AuthenticationMiddlewares.Authentication, FollowControllers.find)
+// router.post("/follow", AuthenticationMiddlewares.Authentication, FollowControllers.followed)
+// router.get("/follow", AuthenticationMiddlewares.Authentication, FollowControllers.find)
+router.get("/follows", AuthenticationMiddlewares.Authentication, FollowsController.find);
+router.post("/follow", AuthenticationMiddlewares.Authentication, FollowsController.create);
+router.delete("/follow/:followed_user_id", AuthenticationMiddlewares.Authentication, FollowsController.delete);
+
 
 // NOTIFICATION
 router.get("/notifications", (req: express.Request, res: express.Response) => {

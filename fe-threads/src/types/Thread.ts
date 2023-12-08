@@ -15,5 +15,5 @@ export type IThreadCard = {
   likes_count?: number;
   replies_count?: number;
   replies?: Reply[];
-  likes?: any[];
+  is_liked?: boolean;
 }

@@ -4,9 +4,12 @@ import { API } from '@/libs/api';
 import { Box, Input, InputGroup, InputLeftElement } from '@chakra-ui/react'
 import { useQuery } from '@tanstack/react-query';
 import { AiOutlineTeam } from "react-icons/ai";
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store/type/RootState';
 // import { IUser } from '@/types/User';
 
 export default function ListUser() {
+  const auth = useSelector((state: RootState) => state.auth)
   const [filter, setFilter]:  [string, (search: string) => void]  = React.useState("")
   const { data: getUsers } = useQuery({
     queryKey: ['users'],
@@ -19,6 +22,9 @@ export default function ListUser() {
       }
     }
   })
+
+  console.log(getUsers);
+  
 
   const handleChangeFilter = (e: { target: { value: string; }; }) => {
     setFilter(e.target.value)
@@ -57,8 +63,9 @@ export default function ListUser() {
                 <CardUser 
                   full_name={data?.full_name} 
                   username={data?.username}
-                  picture={data?.picture}
+                  picture={data?.image}
                   description={data?.description}
+                  isFollowing={data?.isFollowing}
                 />
               </Box>
             )
@@ -70,3 +77,5 @@ export default function ListUser() {
     </Box>
   )
 }
+
+

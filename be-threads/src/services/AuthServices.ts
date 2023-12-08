@@ -52,11 +52,8 @@ export default new class AuthServices {
       const isCheckEmail = await this.AuthRepository.findOne({
         where: {
           email: value.email
-        },
-        // select: ["id", "full_name", "email", "username", "password", "picture", "description"]
+        }
       })
-
-      console.log(isCheckEmail)
 
       if (!isCheckEmail) {
         throw new Error("Email not found")

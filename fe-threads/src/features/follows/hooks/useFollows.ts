@@ -1,56 +1,29 @@
-import React from 'react'
-import { API } from "@/libs/api"
+import { useDispatch } from 'react-redux'
+import { SET_FOLLOW } from '@/store/RootReducer'
+import { API } from '@/libs/api';
 
-interface User {
-  id: number;
-  username: string;
-  full_name: string;
-  email: string;
-  picture: string | null;
-  description: string | null;
-}
+export default function useFollows() {
+  const dispatch = useDispatch()
 
-export default function useFollow() {
-  const [listFollow, setListFollow] = React.useState<User[]>([])
-  
-  React.useEffect(() => {
-    counting()
-  }, [])
-
-
-  async function getFollow(type: string) {
+  async function handleFollow(id: number, followedUserId: number, isFollowed: boolean) {
     try {
-      const response = await API.get(`/follow?type=${type}`)
-      
-      console.log(response.data)
-      setListFollow(response.data)
-    } catch (err) {
-      throw err
-    }
-  }
+      if(!isFollowed) {
+        const res = await API.post("/follow", { followed_user_id: followedUserId });
+        console.log(res)
+        
+        dispatch(SET_FOLLOW({ id, isFollowed }))
+      } else {
+        const res = await API.delete(`/follow/${followedUserId}`)
+        console.log(res)
 
-  async function counting() {
-    try {
-
-      const followers = await API.get(`/follow?type=followers`)
-      const following = await API.get(`/follow?type=followings`)
-
-      return {
-        countFollowers: followers?.data?.length,
-        countFollowings: following?.data?.length
+        dispatch(SET_FOLLOW({ id, isFollowed }))
       }
     } catch (err) {
       throw err
     }
-  } 
-
-  async function follow(id: number) {
-    try {
-      await API.post("/follow", {followingId: id})
-    } catch (err) {
-      throw err
-    }
   }
 
-  return { listFollow, follow, getFollow, counting }
+  return {
+    handleFollow
+  }
 }

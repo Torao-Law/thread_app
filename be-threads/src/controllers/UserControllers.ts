@@ -51,7 +51,6 @@ export default new class UserControllers {
       if(user === null) return res.status(400).json({ message: `User ID: ${id} not found`})
 
       const cloudinaryResponse = await CloudinaryConfig.destination(image)
-      console.log(cloudinaryResponse)
       
       const { error, value } = updateUserSchema.validate({username, full_name, email, password, cloudinaryResponse, description})
       if(error) return res.status(400).json({ message: "Data not relevant please make sure !"})
@@ -63,8 +62,7 @@ export default new class UserControllers {
         }
       });
 
-      const data = await UserServices.update(user)
-      console.log(data)
+      await UserServices.update(user)
       const response: User | any = await UserServices.findOne(id);
 
       return res.status(201).json(response)

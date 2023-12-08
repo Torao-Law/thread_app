@@ -1,9 +1,34 @@
+import React from 'react'
 import { RootState } from '@/store/type/RootState'
 import { Box, Card, Text, Image, Avatar, CardBody, Button } from '@chakra-ui/react'
 import { useSelector } from 'react-redux'
+import { API } from '@/libs/api'
 
 export function MyProfile() {
   const auth = useSelector((state: RootState) => state.auth)
+  const [countFollow, setCountFollow] = React.useState({
+    followers: 0,
+    followings: 0
+  })
+  
+  React.useEffect(() => {
+    async function fetch() {
+      try {
+        const sumFollowers = await API.get(`/follows?type=followers`);
+        const sumFollowings = await API.get(`/follows?type=followings`);
+        
+        setCountFollow({
+          followers: sumFollowers.data.length,
+          followings: sumFollowings.data.length
+        })
+        
+      } catch (err) {
+        throw err
+      }
+    }
+
+    fetch()
+  }, [])
 
   return (
     <>
@@ -51,11 +76,11 @@ export function MyProfile() {
             <Text>{ auth?.description ? auth?.description : "Set your description"}</Text>
             <Box display={"flex"} gap={3}>
               <Box display={"flex"} gap={2} fontSize={"xs"}>
-                <Text fontWeight={"bold"}>291</Text>
+                <Text fontWeight={"bold"}>{countFollow.followings}</Text>
                 <Text>Following</Text>
               </Box>
               <Box display={"flex"} gap={2} fontSize={"xs"}>
-                <Text fontWeight={"bold"}>23</Text>
+                <Text fontWeight={"bold"}>{countFollow.followers}</Text>
                 <Text>Followers</Text>
               </Box>
             </Box>

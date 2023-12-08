@@ -27,51 +27,55 @@ export default function Main({children}: {children: ReactNode}) {
         </Box>
       ) : (
         <>
-          <Box 
-            display={"flex"}
-            width={"300px"}
-            height={"fit-content"}
-            position={"fixed"}
-            left={"30px"}
-            paddingTop={"30px"}
-            paddingRight={"30px"}
-            borderRight={"1px solid #d3d3d3"}
-            h={"100vh"}
-          > 
+          <Box height={"100vh"} 
+            
+            overflowY={'scroll'}>
             <Box 
-              width={"100%"} 
-              display={"flex"} 
-              flexDirection={"column"} 
-              gap={2}
-            >
-              <Navbar />
-            </Box>
-          </Box>
-
-          {children}
-
-          <Box
-            display={"flex"}
-            flexDirection={"column"}
-            gap={5}
-            position={"fixed"}
-            right={"30px"}
-            top={"0px"}
-            paddingTop={"10px"}
-            paddingLeft={"30px"}
-            borderLeft={"1px solid #d3d3d3"}
-            h={"100vh"}
-          >
-            <Box>
-              <MyProfile />
+              display={"flex"}
+              width={"300px"}
+              height={"fit-content"}
+              position={"fixed"}
+              left={"30px"}
+              paddingTop={"30px"}
+              paddingRight={"30px"}
+              borderRight={"1px solid #d3d3d3"}
+              h={"100vh"}
+              > 
+              <Box 
+                width={"100%"} 
+                display={"flex"} 
+                flexDirection={"column"} 
+                gap={2}
+                >
+                <Navbar />
+              </Box>
             </Box>
 
-            <Box>
-              <SuggestedFollow />
-            </Box>
+            {children}
 
-            <Box>
-              <Footer />
+            <Box
+              display={"flex"}
+              flexDirection={"column"}
+              gap={5}
+              position={"fixed"}
+              right={"30px"}
+              top={"0px"}
+              paddingTop={"10px"}
+              paddingLeft={"30px"}
+              borderLeft={"1px solid #d3d3d3"}
+              h={"100vh"}
+              >
+              <Box>
+                <MyProfile />
+              </Box>
+
+              <Box>
+                <SuggestedFollow />
+              </Box>
+
+              <Box>
+                <Footer />
+              </Box>
             </Box>
           </Box>
         </>

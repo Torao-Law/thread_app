@@ -51,7 +51,7 @@ export function ThreadCard(props: IThreadCard) {
               alignItems={"center"}
               backgroundColor={"transparent"}
               cursor={"pointer"}
-              color={props?.likes ? "red" : "black"}
+              color={props?.is_liked ? "red" : "black"}
               onClick={() => handleLike(props.id)}
               gap={1}
               _hover={{ color: "gray"}}
