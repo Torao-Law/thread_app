@@ -42,18 +42,25 @@ export default new class UserControllers {
   async update(req: Request, res: Response) {
     try {
       const id = parseInt(req.params.id)
-      const { full_name, username, email, password, description } = req.body;
-      let image = res.locals.filename || null;   
-      
+      const image = res.locals.filename || null
+      const data = {
+        ...req.body,
+        image
+      } 
+
       if(isNaN(id) || id < 0) return res.status(400).json({ message: "Invalid ID provided!" });
       
       const user: User | any = await UserServices.findOne(id);
       if(user === null) return res.status(400).json({ message: `User ID: ${id} not found`})
 
-      const cloudinaryResponse = await CloudinaryConfig.destination(image)
-      
-      const { error, value } = updateUserSchema.validate({username, full_name, email, password, cloudinaryResponse, description})
-      if(error) return res.status(400).json({ message: "Data not relevant please make sure !"})
+      const { error, value } = updateUserSchema.validate(data)
+      if(error) return res.status(400).json({ message: error})   
+
+      let cloudinaryResponse = user.image
+      if(image) {
+        const data = await CloudinaryConfig.destination(value.image)
+        cloudinaryResponse = data
+      }
 
       const fieldsToUpdate = ['username', 'full_name', 'email', 'password', 'image', 'description'];
       fieldsToUpdate.forEach(field => {
@@ -62,6 +69,8 @@ export default new class UserControllers {
         }
       });
 
+      user.image = cloudinaryResponse
+      
       await UserServices.update(user)
       const response: User | any = await UserServices.findOne(id);
 
@@ -70,9 +79,5 @@ export default new class UserControllers {
       return res.status(500).json({ err: "Something went wrong on the server!" })
     }
   }
-  
-  // create(req: Request, res: Response) {
-  //   ThreadQueue.create(req, res)
-  // }
 }
 

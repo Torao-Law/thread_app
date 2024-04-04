@@ -1,18 +1,23 @@
-import React from 'react'
-import { API } from '@/libs/api'
-import { Follows } from '@/features/follows'
-import { RootState } from '@/store/type/RootState'
-import { useDispatch } from 'react-redux'
-import { useSelector } from 'react-redux'
-import { GET_FOLLOWS, SET_FOLLOW_STATE } from '@/store/RootReducer'
-import { Box, Text } from '@chakra-ui/react'
+import React from "react";
+import { API } from "@/libs/api";
+import { Follows } from "@/features/follows";
+import { RootState } from "@/store/type/RootState";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { GET_FOLLOWS, SET_FOLLOW_STATE } from "@/store/RootReducer";
+import { Box, Text } from "@chakra-ui/react";
 
 export default function Follow() {
-  const dispatch = useDispatch()
-  const followState = useSelector((state: RootState) => state.follow.followState)
-  const follows = useSelector((state: RootState) => state.follow.follows)
-  const [isActiveFollowers, setIsActiveFollowers] = React.useState<boolean>(true)
-  const [isActiveFollowing, setIsActiveFollowing] = React.useState<boolean>(!isActiveFollowers)
+  const dispatch = useDispatch();
+  const followState = useSelector(
+    (state: RootState) => state.follow.followState
+  );
+  const follows = useSelector((state: RootState) => state.follow.follows);
+  const [isActiveFollowers, setIsActiveFollowers] =
+    React.useState<boolean>(true);
+  const [isActiveFollowing, setIsActiveFollowing] = React.useState<boolean>(
+    !isActiveFollowers
+  );
 
   React.useEffect(() => {
     async function fetch() {
@@ -20,16 +25,16 @@ export default function Follow() {
         const response = await API.get(`/follows?type=followers`);
         dispatch(GET_FOLLOWS(response.data));
       } catch (err) {
-        throw err
+        throw err;
       }
     }
 
-    fetch()
-  }, [])
+    fetch();
+  }, []);
 
   React.useEffect(() => {
-    getFollowData()
-  }, [followState])
+    getFollowData();
+  }, [followState]);
 
   async function getFollowData() {
     const response = await API.get(`/follows?type=${followState}`);
@@ -37,16 +42,16 @@ export default function Follow() {
   }
 
   const handleActiveFollowers = async () => {
-    dispatch(SET_FOLLOW_STATE("followers"))
-    setIsActiveFollowing(!isActiveFollowing)
-    setIsActiveFollowers(!isActiveFollowers)
-  }
-  
+    dispatch(SET_FOLLOW_STATE("followers"));
+    setIsActiveFollowing(!isActiveFollowing);
+    setIsActiveFollowers(!isActiveFollowers);
+  };
+
   const handleActiveFollowing = async () => {
-    dispatch(SET_FOLLOW_STATE("followings"))
-    setIsActiveFollowing(!isActiveFollowing)
-    setIsActiveFollowers(!isActiveFollowers)
-  }
+    dispatch(SET_FOLLOW_STATE("followings"));
+    setIsActiveFollowing(!isActiveFollowing);
+    setIsActiveFollowers(!isActiveFollowers);
+  };
 
   return (
     <Box display={"flex"} justifyContent={"center"}>
@@ -54,36 +59,32 @@ export default function Follow() {
         display={"flex"}
         flexDirection={"column"}
         paddingY={"20px"}
-        minWidth="650px"
-        marginLeft={"-30px"}
+        width="620px"
+        marginLeft={"-10px"}
         borderColor={"brand.grey"}
       >
-        <Text
-          fontSize={"xl"}
-          fontWeight={"bold"}
-          mb={4}
-        >
+        <Text fontWeight={"bold"} fontSize={"xl"} mb={4}>
           Follow
         </Text>
 
         <Box display={"flex"} textAlign={"center"}>
           <Box onClick={handleActiveFollowers} w={"full"} cursor={"pointer"}>
-            <Text 
-              w={"full"} 
+            <Text
+              w={"full"}
               fontSize={"md"}
               pb={2}
-              borderBottom={isActiveFollowers ? "1px solid red" : 'none'}
+              borderBottom={isActiveFollowers ? "1px solid red" : "1px solid #dbdbdb"}
             >
               Followers
             </Text>
           </Box>
 
           <Box onClick={handleActiveFollowing} w={"full"} cursor={"pointer"}>
-            <Text 
-              w={"full"} 
+            <Text
+              w={"full"}
               fontSize={"md"}
               pb={2}
-              borderBottom={isActiveFollowing ? "1px solid red" : 'none'}
+              borderBottom={isActiveFollowing ? "1px solid red" : "1px solid #dbdbdb"}
             >
               Following
             </Text>
@@ -91,7 +92,7 @@ export default function Follow() {
         </Box>
 
         <Box px={4}>
-          {follows.map((follow, index) => (
+          {follows?.map((follow, index) => (
             <Follows
               key={index}
               id={follow.id}
@@ -107,5 +108,5 @@ export default function Follow() {
         </Box>
       </Box>
     </Box>
-  )
+  );
 }

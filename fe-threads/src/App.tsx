@@ -44,12 +44,10 @@ function App() {
     try {
       setAuthToken(localStorage.token)
       const response = await API.get('/auth/check')
-      console.log("authCheck : ", response)
       dispatch(AUTH_CHECK(response.data.user))
       setIsLoading(false)
     } catch (err) {
       dispatch(AUTH_ERROR())
-      console.log("auth check error", err)
       setIsLoading(false)
       navigate('/auth/login')
     }

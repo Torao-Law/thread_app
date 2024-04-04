@@ -1,13 +1,14 @@
 import { setAuthToken } from "@/libs/api";
 import { IUser } from "@/types/User";
 import { createSlice } from "@reduxjs/toolkit";
+import { useNavigate } from "react-router-dom";
 
 const initiaslState: IUser = {
   id: 0,
   full_name: "",
   username: "",
   email: "",
-  picture: "",
+  image: "",
   description: ""
 }
 
@@ -26,7 +27,7 @@ export const authSlice = createSlice({
         username: payload.user.username,
         email: payload.user.email,
         description: payload.user.description,
-        picture: payload.user.picture
+        image: payload.user.image
       }
 
       return user
@@ -39,14 +40,30 @@ export const authSlice = createSlice({
         full_name: payload.full_name,
         username: payload.username,
         email: payload.email,
-        picture: payload.picture,
+        image: payload.image,
+        description: payload.description
+      }
+
+      return user
+    },
+    AUTH_EDIT: (_, action) => {
+      const payload = action.payload
+
+      const user: IUser = {
+        id: payload.id,
+        full_name: payload.full_name,
+        username: payload.username,
+        email: payload.email,
+        image: payload.image,
         description: payload.description
       }
 
       return user
     },
     AUTH_ERROR: () => {
+      const navigate = useNavigate()
       localStorage.removeItem("token")
+      navigate("/auth/login")
     },
     AUTH_LOGOUT: () => {
       localStorage.removeItem("token")

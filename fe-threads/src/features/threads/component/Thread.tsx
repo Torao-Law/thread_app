@@ -18,7 +18,7 @@ export function ThreadCard(props: IThreadCard) {
         padding={"20px"}
       >
         <Image
-          src={props.users?.picture ? props.users?.picture : "https://i.pinimg.com/564x/bc/c6/e1/bcc6e12a3bef4190e0f8f1a14885c321.jpg"}
+          src={typeof props.users?.image === "string" ? props.users?.image : "https://i.pinimg.com/564x/bc/c6/e1/bcc6e12a3bef4190e0f8f1a14885c321.jpg"}
           width={"50px"}
           height={"50px"}
           objectFit={"cover"}

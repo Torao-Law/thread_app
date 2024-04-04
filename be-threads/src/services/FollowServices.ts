@@ -21,7 +21,7 @@
 //           }
 //         }
 //       })
-      
+
 //       if(isFollowing > 0) return "You've been following this account";
 
 //       const obj = this.FollowRepository.create({
@@ -55,7 +55,6 @@
 //           relations: ["following"],
 //         });
 
-        
 //         return follows.map((follow) => ({
 //           id: follow.id,
 //           user_id: follow.following.id,
@@ -76,7 +75,7 @@
 //           },
 //           relations: ["followers"],
 //         });
-        
+
 //         return await Promise.all(
 //           follows.map(async (follow) => {
 //             const isFollowed = await this.FollowRepository.count({
@@ -127,10 +126,14 @@ class FollowsService {
   private readonly userRepository: Repository<User> =
     AppDataSource.getRepository(User);
 
-  async find(loginSession: any, queryType?: string, queryLimit?: number): Promise<any> {
+  async find(
+    loginSession: any,
+    queryType?: string,
+    queryLimit?: number
+  ): Promise<any> {
     try {
       let follows: Follow[];
-      
+
       if (queryType === "followings") {
         follows = await this.followRepository.find({
           take: queryLimit,
@@ -141,7 +144,7 @@ class FollowsService {
           },
           relations: ["following"],
         });
-        
+
         return follows.map((follow) => ({
           id: follow.id,
           user_id: follow.following.id,
@@ -162,7 +165,7 @@ class FollowsService {
           },
           relations: ["followers"],
         });
-        
+
         return await Promise.all(
           follows.map(async (follow) => {
             const isFollowed = await this.followRepository.count({
@@ -189,7 +192,6 @@ class FollowsService {
           })
         );
       }
-
 
       return {
         message: `Please specify valid query "type" (followers / followings)`,
@@ -273,7 +275,7 @@ class FollowsService {
 
       return {
         message: "You unfollow this user!",
-        follow: follow,
+        follow: "follow",
       };
     } catch (error) {
       throw new Error(error.message);

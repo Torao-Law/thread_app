@@ -16,9 +16,9 @@ export function useThreads() {
     queryFn: async () => await API.get('/threads?limit=5').then(response => response.data)
   });
 
-  const getThreadId = async (threadId: any) => {
+  const getThreadUserId = async (userId: any) => {
     try {
-      const threadsById = await API.get(`/thread/${threadId}`);
+      const threadsById = await API.get(`/thread/${userId}`);
       return threadsById.data;
     } catch (err) {
       throw err;
@@ -84,7 +84,7 @@ export function useThreads() {
   return { 
     form,
     getThreads,
-    getThreadId,
+    getThreadUserId,
     handleChange,
     handlePost,
     fileInputRef,

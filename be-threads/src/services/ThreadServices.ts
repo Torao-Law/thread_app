@@ -60,11 +60,19 @@ export default new class ThreadServices {
           }
         },
         relations: ["users", "replies", "likes.user"],
+        select: {
+          users: {
+            id: true,
+            username: true,
+            full_name: true,
+            image: true
+          }
+        },
         order: {
           id: "DESC"
         }
       });
-      
+
       let newResponse = thread.map(element => ({
         ...element,
         replies_count: element.replies.length,

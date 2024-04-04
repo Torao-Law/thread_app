@@ -7,7 +7,6 @@ export function SuggestedFollow() {
   const { suggestFollow } = useSuggestFollow()
   const { handleFollow } = useFollow() 
   
-
   return (
     <Box display={"flex"} width={"300px"} height={"fit-content"} >
         <Card 
@@ -28,7 +27,7 @@ export function SuggestedFollow() {
               
             >
               <Avatar
-                src="https://static1.personality-database.com/profile_images/4b05b8222e1f47d1b721ebe0800c9169.png"
+                src={item.image ? item.image :"https://static1.personality-database.com/profile_images/4b05b8222e1f47d1b721ebe0800c9169.png"}
                 border={"2px solid black"}
                 size={"sm"}
               />
@@ -51,9 +50,10 @@ export function SuggestedFollow() {
               </Box>
               <Button 
                 size={"xs"} 
-                variant={"outline"}
+                variant={"solid"}
                 borderRadius={'full'}
-                borderColor={"gray"}
+                colorScheme='green'
+                bg={'green'}
                 onClick={() => handleFollow(item?.id, item.user_id, item.is_followed)}
               >
                 Follow

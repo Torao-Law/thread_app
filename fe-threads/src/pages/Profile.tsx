@@ -1,184 +1,205 @@
-import React from 'react'
-import { Footer, Navbar, SuggestedFollow } from "@/components"
-import { RootState } from "@/store/type/RootState"
-import { Box, Text, Avatar, useDisclosure } from "@chakra-ui/react"
-import { useSelector } from "react-redux"
-import { useThreads } from "@/features/threads/Hooks/useThreads"
-import { useParams } from "react-router-dom"
-import { AiFillEdit } from "react-icons/ai";
-import { ThreadCard } from '@/features/threads'
-import EditProfileModal from '@/features/profile/components/EditProfileModal'
-import { API } from '@/libs/api'
+import React from "react";
+import { Footer, Navbar, SuggestedFollow } from "@/components";
+import { RootState } from "@/store/type/RootState";
+import {
+  Box,
+  Text,
+  Avatar,
+  useDisclosure,
+  Image,
+  Button,
+} from "@chakra-ui/react";
+import { useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import { AiOutlineArrowLeft } from "react-icons/ai";
+import { ThreadCard } from "@/features/threads";
+import EditProfileModal from "@/features/profile/components/EditProfileModal";
+import { API } from "@/libs/api";
 
 export default function Profile() {
-  const auth = useSelector((state: RootState) => state.auth)
-  const { id } = useParams()
-  const { getThreadId } = useThreads();
-  const { isOpen, onOpen, onClose } = useDisclosure()
-  const [threadById, setThreadById] = React.useState([])
-  const [countFollow, setCountFollow] = React.useState({
-    followers: 0,
-    followings: 0
-  })
-  
-  React.useEffect(() => {
-    async function fetch() {
-      try {
-        const thread = await getThreadId(id)
-        const sumFollowers = await API.get(`/follows?type=followers`);
-        const sumFollowings = await API.get(`/follows?type=followings`);
-        
-        setCountFollow({
-          followers: sumFollowers.data.length,
-          followings: sumFollowings.data.length
-        })
-        
-        setThreadById(thread)
-      } catch (err) {
-        throw err
-      }
-    }
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const auth = useSelector((state: RootState) => state.auth);
+  const [isAllPost, setIsAllPost] = React.useState<boolean>(true);
+  const [isMedia, setIsMedia] = React.useState<boolean>(false);
+  const [threadByUser, setThreadByUser] = React.useState<any[]>();
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
-    fetch()
-  }, [])
- 
-  console.log(threadById);
-  
+  const handleAllPostChange = (): void => {
+    setIsAllPost(!isAllPost);
+    setIsMedia(!isMedia);
+  };
+
+  const handleIsMediaChange = (): void => {
+    setIsAllPost(!isAllPost);
+    setIsMedia(!isMedia);
+  };
+
+  const getThreadByUser = async () => {
+    try {
+      const response = await API.get(`/thread/${Number(id)}`);
+      setThreadByUser(response.data);
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const threadOnlyImg = threadByUser?.filter(
+    (data: any) => data.image !== null
+  );
+
+  React.useEffect(() => {
+    getThreadByUser();
+  }, []);
 
   return (
-    <>
-      <Box 
+    <Box height={"100vh"} overflowY={"scroll"}>
+      <Box
         display={"flex"}
-        width={"300px"}
+        width={"320px"}
         height={"fit-content"}
         position={"fixed"}
-        left={"30px"}
-        paddingTop={"30px"}
+        left={"20px"}
         paddingRight={"30px"}
         borderRight={"1px solid #d3d3d3"}
         h={"100vh"}
-      > 
-        <Box 
-          width={"100%"} 
-          display={"flex"} 
-          flexDirection={"column"} 
-          gap={2}
-        >
+      >
+        <Box width={"100%"} display={"flex"} flexDirection={"column"} gap={2}>
           <Navbar />
         </Box>
       </Box>
-        
-      <Box display={"flex"} justifyContent={"center"}>
-        <Box
-          display={"flex"}
-          alignItems={"center"}
-          flexDirection={"column"}
-          paddingY={"20px"}
-          width="660px"
-          marginLeft={"-30px"}
-          borderColor={"brand.grey"}
-        >
+
+      <Box w={650} mx={"auto"} px={4}>
+        <Box display={"inline-block"}>
           <Box
             display={"flex"}
-            flexDirection={"column"}
-            justifyContent={"center"}
             alignItems={"center"}
+            cursor={"pointer"}
+            onClick={() => navigate("/")}
+            mt={4}
           >
-            <Avatar 
-              size='xl' 
-              name='profile-img' 
-              boxShadow={ auth.picture ? auth.picture : "0 0px 8px 0 rgba(0, 0, 0, 0.2)" }
-              src={ auth.picture ? auth.picture : 'https://img.freepik.com/free-vector/illustration-businessman_53876-5856.jpg?w=740&t=st=1701043356~exp=1701043956~hmac=2b339a836ef9e279252bef8898580a978b5f51db4ddb50f77fa984a8bb2f81e1' }
-            />
+            <AiOutlineArrowLeft />
+            <Text ms={4} fontWeight={"bold"} fontSize={"xl"}>
+              {auth?.full_name}
+            </Text>
+          </Box>
+        </Box>
 
-            <Box 
-              w={8}
-              h={8}
-              borderRadius={'full'}
-              display={"flex"}
-              justifyContent={"center"}
-              alignItems={"center"}
-              position={"absolute"}
-              top={6}
-              left={690}
-              bg={'gray'}
-              textColor={'white'}
-              cursor={"pointer"}
+        <Box>
+          <Image
+            src="https://images.pexels.com/photos/6985001/pexels-photo-6985001.jpeg?cs=srgb&dl=pexels-codioful-%28formerly-gradienta%29-6985001.jpg&fm=jpg"
+            objectFit={"cover"}
+            mt={4}
+            borderRadius={"10px"}
+            height={"100px"}
+            width={"100%"}
+          />
+
+          <Avatar
+            src={
+              typeof auth?.image === "string"
+                ? auth?.image
+                : "https://static1.personality-database.com/profile_images/4b05b8222e1f47d1b721ebe0800c9169.png"
+            }
+            border={"4px solid white"}
+            width={"80px"}
+            height={"80px"}
+            style={{ margin: "-45px 0 0 25px" }}
+          />
+
+          <Box display={"flex"} justifyContent={"end"}>
+            <Button
+              variant={"outline"}
+              borderRadius={"full"}
+              size={"xs"}
+              borderColor={"gray"}
+              mt={-5}
+              paddingX={4}
               onClick={() => onOpen()}
             >
-              <AiFillEdit />
-            </Box>
+              Edit Profile
+            </Button>
 
-            <EditProfileModal isOpen={isOpen} onClose={onClose}/>
-            <Text textAlign={"center"} fontWeight={"bold"} fontSize={"xl"} mt={2}>{auth?.full_name}</Text>
+            <EditProfileModal isOpen={isOpen} onClose={onClose} />
           </Box>
+        </Box>
 
+        <Box>
+          <Text fontWeight={"bold"} fontSize={"2xl"}>
+            {auth?.full_name}
+          </Text>
+          <Text color={"gray"} fontSize={"sm"}>
+            @{auth?.username}
+          </Text>
+          {auth?.description ? (
+            <Text>{auth?.description}</Text>
+          ) : (
+            <Text>Set your description...</Text>
+          )}
+
+          <Box display={"flex"} gap={5} mt={1}>
+            <Box display={"flex"} gap={2} fontSize={"sm"}>
+              <Text fontWeight={"bold"}>{0}</Text>
+              <Text>Following</Text>
+            </Box>
+            <Box display={"flex"} gap={2} fontSize={"sm"}>
+              <Text fontWeight={"bold"}>{0}</Text>
+              <Text>Followers</Text>
+            </Box>
+          </Box>
+        </Box>
+
+        <Box display={"flex"} mt={5}>
           <Box
-            display={"flex"}
-            alignItems={"center"}
-            justifyContent={"center"}
-            gap={10}
-            mt={5}
+            w={"full"}
+            onClick={handleAllPostChange}
+            cursor={"pointer"}
+            pb={2}
+            borderBottom={isAllPost ? "1px solid red" : "1px solid #dbdbdb"}
           >
-            <Box
-              display={'flex'}
-              gap={2}
-            >
-              <Text
-                fontWeight={"bold"}
-              >
-                { !threadById ? "0" : threadById.length }
-              </Text>
-              <Text>
-                Posting
-              </Text>
-            </Box>
-
-            <Box
-              display={'flex'}
-              gap={2}
-            >
-              <Text
-                fontWeight={"bold"}
-              >
-                { countFollow.followers }
-              </Text>
-              <Text>
-                Followers
-              </Text>
-            </Box>
-
-            <Box
-              display={'flex'}
-              gap={2}
-            >
-              <Text
-                fontWeight={"bold"}
-              >
-                { countFollow.followings }
-              </Text>
-              <Text>
-                Following
-              </Text>
-            </Box>
+            <Text textAlign={"center"}>All Post</Text>
           </Box>
+          <Box
+            w={"full"}
+            onClick={handleIsMediaChange}
+            cursor={"pointer"}
+            pb={2}
+            borderBottom={isMedia ? "1px solid red" : "1px solid #dbdbdb"}
+          >
+            <Text textAlign={"center"}>Media</Text>
+          </Box>
+        </Box>
 
-          <Box>
-            { threadById?.map((item: any) => (
-              <Box key={item.id}>
+        <Box ms={-6}>
+          {isAllPost ? (
+            threadByUser && threadByUser.length > 0 ? (
+              threadByUser.map((data: any) => (
                 <ThreadCard
-                  id={item.id}
-                  users={item?.users}
-                  content={item.content}
-                  likes_count={item.likes_count}
-                  posted_at={item.posted_at}
-                  replies_count={item.replies_count}
-                  image={item.image}
-                  is_liked={item.is_liked}
+                  key={data.id}
+                  id={data.id}
+                  content={data.content}
+                  image={data.image}
+                  is_liked={data.is_liked}
+                  likes_count={data.likes_count}
+                  posted_at={data.posted_at}
+                  replies_count={data.replies_count}
+                  users={data.users}
                 />
-              </Box>
-            ))}
-          </Box>
+              ))
+            ) : (
+              <Text textAlign={"center"} fontWeight={"bold"} mt={10}>
+                No Posts Yet
+              </Text>
+            )
+          ) : threadOnlyImg && threadOnlyImg.length > 0 ? (
+            threadOnlyImg.map((data: any) => (
+              <Image key={data.id} src={data.image} alt="thread" />
+            ))
+          ) : (
+            <Text textAlign={"center"} fontWeight={"bold"} mt={10}>
+              No Media Yet
+            </Text>
+          )}
         </Box>
       </Box>
 
@@ -189,12 +210,12 @@ export default function Profile() {
         position={"fixed"}
         right={"30px"}
         top={"0px"}
-        paddingTop={"30px"}
-        paddingLeft={"30px"}
+        paddingTop={"10px"}
+        paddingLeft={"35px"}
         borderLeft={"1px solid #d3d3d3"}
         h={"100vh"}
       >
-        <Box>
+        <Box mt={4}>
           <SuggestedFollow />
         </Box>
 
@@ -202,7 +223,6 @@ export default function Profile() {
           <Footer />
         </Box>
       </Box>
-    </>
-  )
+    </Box>
+  );
 }
-

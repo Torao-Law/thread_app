@@ -28,7 +28,17 @@ export default new class UserSevices {
 
   async findOne(id: number) : Promise<object | string> {
     try {
-      const arr = await this.UserRepository.findOne({ where: { id }})
+      const arr = await this.UserRepository.findOne({ 
+        where: { id },
+        select: {
+          id: true,
+          email: true,
+          description: true,
+          full_name: true,
+          username: true,
+          image: true
+        }
+      })
 
       return arr
     } catch (err) {

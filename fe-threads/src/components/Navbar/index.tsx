@@ -10,7 +10,7 @@ export function Navbar() {
 
   return (
     <Box width={"100%"} display={"flex"} flexDirection={"column"} gap={2}>
-      <Text fontWeight={"bold"} fontSize={"50px"} color={"green"}>
+      <Text fontWeight={"bold"} fontSize={"40px"} color={"green"}>
         Circle
       </Text>
 

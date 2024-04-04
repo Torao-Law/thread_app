@@ -6,6 +6,7 @@ export default new class ThreadControllers {
   async find(req: Request, res: Response) {
     try {
       const loginSession = res.locals.loginSession
+
       const response = await ThreadServices.find(req.query, loginSession);
       
       return res.status(200).json(response);

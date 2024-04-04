@@ -3,7 +3,7 @@ export type IUser = {
   full_name?: string;
   username?: string;
   email?: string;
-  picture?: string;
+  image?: string | Blob;
   description?: string;
 }
 
