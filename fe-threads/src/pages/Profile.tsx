@@ -8,6 +8,8 @@ import {
   useDisclosure,
   Image,
   Button,
+  Grid,
+  GridItem,
 } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
@@ -192,9 +194,13 @@ export default function Profile() {
               </Text>
             )
           ) : threadOnlyImg && threadOnlyImg.length > 0 ? (
-            threadOnlyImg.map((data: any) => (
-              <Image key={data.id} src={data.image} alt="thread" />
-            ))
+            <Grid templateColumns="repeat(3, 1fr)" gap={1} mt={2} >
+              {threadOnlyImg.map((data: any) => (
+                <GridItem w="100%" h="100%" border={"1px solid #dbdbdb"}>
+                  <Image key={data.id} src={data.image} alt="thread" w={"full"} h={"full"} />
+                </GridItem>
+              ))}
+            </Grid>
           ) : (
             <Text textAlign={"center"} fontWeight={"bold"} mt={10}>
               No Media Yet

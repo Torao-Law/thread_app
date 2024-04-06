@@ -1,7 +1,6 @@
 import { setAuthToken } from "@/libs/api";
 import { IUser } from "@/types/User";
 import { createSlice } from "@reduxjs/toolkit";
-import { useNavigate } from "react-router-dom";
 
 const initiaslState: IUser = {
   id: 0,
@@ -61,9 +60,7 @@ export const authSlice = createSlice({
       return user
     },
     AUTH_ERROR: () => {
-      const navigate = useNavigate()
       localStorage.removeItem("token")
-      navigate("/auth/login")
     },
     AUTH_LOGOUT: () => {
       localStorage.removeItem("token")

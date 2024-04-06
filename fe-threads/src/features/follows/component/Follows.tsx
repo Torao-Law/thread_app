@@ -4,11 +4,10 @@ import useFollows from '../hooks/useFollows'
 
 export function Follows(props: IFollow) {
   const { handleFollow } = useFollows()
-  
-  
+
   return (
     <>
-      <Box display={"flex"} width="100%" mt={4}>
+      <Box display={"flex"} width="100%" mt={4} alignItems={"center"}>
         <Image
           src={props.picture ?? "https://static1.personality-database.com/profile_images/4b05b8222e1f47d1b721ebe0800c9169.png"}
           width={"50px"}
@@ -32,7 +31,7 @@ export function Follows(props: IFollow) {
               variant= {props.is_followed ? 'outline' : 'solid' }
               colorScheme='green'
               borderRadius={'full'}
-              onClick={() => handleFollow(props.id, props.user_id, props.is_followed)}
+              onClick={() => handleFollow(props.user_id, props.is_followed, props.id)}
               size={'sm'}
             >
               {props.is_followed ? "Unfollow" : "Follow"}

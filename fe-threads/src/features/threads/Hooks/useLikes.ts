@@ -1,22 +1,21 @@
-import { API } from "@/libs/api"
-// import { useThreads } from "./useThreads"
+import { API } from "@/libs/api";
+import { useThreads } from "./useThreads";
+const useLikes = () => {
+  const { refetch } = useThreads();
 
-export default function useLikes() {
-  // const { getThreads } = useThreads()
-
-  // console.log(getThreads)
-
-  async function handleLike(id?: number ) {
-    // try {
-
-    // }
-    await API.post("/like", { thread_id: id})
-  }
-
-
+  const handleIsLike = async (id?: number, isLike?: boolean) => {
+    if (!isLike) {
+      await API.post("/like", { thread_id: id });
+      refetch();
+    } else {
+      await API.delete(`/like/${id}`);
+      refetch();
+    }
+  };
 
   return {
-    handleLike,
-    //  getLike, refetch
-  }
-}
+    handleIsLike,
+  };
+};
+
+export default useLikes;

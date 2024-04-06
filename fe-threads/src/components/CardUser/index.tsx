@@ -5,16 +5,16 @@ import { useMutation } from "@tanstack/react-query";
 export default function CardUser(props: any) {
   const mutationFollow = useMutation({
     mutationFn: async (idUser: number) => {
-      if(!props.isFollowing) {
-        return await API.post("/follow", {followed_user_id: idUser})
+      if (!props.isFollowing) {
+        return await API.post("/follow", { followed_user_id: idUser });
       } else {
-        return await API.delete(`/follow/${idUser}`)
+        return await API.delete(`/follow/${idUser}`);
       }
     },
     onSuccess: () => {
-      props.refetch()
+      props.refetch();
     },
-  })
+  });
 
   return (
     <Box display={"flex"} gap={2} p={0} mt={2} alignItems={"center"}>
@@ -54,7 +54,7 @@ export default function CardUser(props: any) {
         size={"sm"}
         variant={props.isFollowing ? "outline" : "solid"}
         colorScheme="green"
-        bg={props.isFollowing ? "white": "green"}
+        bg={props.isFollowing ? "white" : "green"}
         px={5}
         borderRadius={"full"}
         onClick={() => mutationFollow.mutate(props.id)}

@@ -30,14 +30,13 @@ router.patch("/user/:id", AuthenticationMiddlewares.Authentication, UploadMiddle
 
 // LIKE
 router.post("/like", AuthenticationMiddlewares.Authentication, LikeControllers.create)
+router.delete("/like/:thread_id", AuthenticationMiddlewares.Authentication, LikeControllers.delete)
 
 // REPLY'
 router.post("/reply", AuthenticationMiddlewares.Authentication, ReplyControllers.create)
 router.get("/replies", AuthenticationMiddlewares.Authentication, ReplyControllers.find)
 
 // FOLLOW
-// router.post("/follow", AuthenticationMiddlewares.Authentication, FollowControllers.followed)
-// router.get("/follow", AuthenticationMiddlewares.Authentication, FollowControllers.find)
 router.get("/follows", AuthenticationMiddlewares.Authentication, FollowsController.find);
 router.post("/follow", AuthenticationMiddlewares.Authentication, FollowsController.create);
 router.delete("/follow/:followed_user_id", AuthenticationMiddlewares.Authentication, FollowsController.delete);

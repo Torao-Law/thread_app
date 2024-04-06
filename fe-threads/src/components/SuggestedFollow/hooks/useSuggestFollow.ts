@@ -1,5 +1,6 @@
 import React from "react";
 import { API } from "@/libs/api";
+import { useMutation } from "@tanstack/react-query";
 
 interface User {
   id: number;
@@ -20,6 +21,7 @@ export default function useSuggestFollow() {
   async function getUsers() {
     try {
       const response = await API.get("/users");
+      console.log(response)
       setSuggestFollow(shuffle(response.data));
     } catch (err) {
       throw err;
@@ -49,5 +51,15 @@ export default function useSuggestFollow() {
     return filterIsfollowed;
   }
 
-  return { suggestFollow };
+  const mutationFollow = useMutation({
+    mutationFn: async (idUser: number) => {
+        await API.post("/follow", {followed_user_id: idUser})
+    },
+    onSuccess: () => {
+      getUsers()
+    },
+  })
+
+
+  return { suggestFollow, mutationFollow };
 }

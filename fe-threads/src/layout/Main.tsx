@@ -1,14 +1,14 @@
 import { Box, Text, Spinner } from "@chakra-ui/react";
 import { ReactNode, useState, useEffect } from "react";
 import { Footer, MyProfile, Navbar, SuggestedFollow } from "@/components";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { AUTH_LOGOUT } from "@/store/RootReducer";
 import { useDispatch } from "react-redux";
 import { setAuthToken } from "@/libs/api";
+import { AiOutlineExport } from "react-icons/ai";
 
 export default function Main({ children }: { children: ReactNode }) {
   const dispatch = useDispatch();
-  const navigate= useNavigate()
   const [isLoading, setIsLoading] = useState<boolean>(true);
   useEffect(() => {
     const delay = setTimeout(() => {
@@ -19,8 +19,8 @@ export default function Main({ children }: { children: ReactNode }) {
 
   const handleLogout = () => {
     dispatch(AUTH_LOGOUT());
-    setAuthToken(""); // Clear token
-    window.location.reload(); // Reload page
+    setAuthToken("");
+    window.location.reload();
   };
 
   return isLoading ? (
@@ -63,7 +63,11 @@ export default function Main({ children }: { children: ReactNode }) {
                 mb={4}
                 fontSize={"xl"}
                 _hover={{ textDecoration: "underline" }}
+                display={"flex"}
+                alignItems={"center"}
+                gap={2}
               >
+                <AiOutlineExport />
                 Logout
               </Text>
             </Link>
